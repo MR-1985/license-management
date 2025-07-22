@@ -21,7 +21,7 @@ function createForm(){
     document.getElementById("limitedContent").appendChild(form);
 }
 
-function createSearchLicenseListButton(){
+function createSearchLicenseButton(){
     let searchLicenseButton = document.createElement("button");
     searchLicenseButton.id = "searchLicenseButton";
     searchLicenseButton.innerHTML = "Search Customer";

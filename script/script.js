@@ -6,7 +6,7 @@ async function uploadJson(licenseList) {
         // const proxyUrl = "https://cors-anywhere.herokuapp.com/";
         // const targetUrl = "https://remotestorage-e4bbd-default-rtdb.europe-west1.firebasedatabase.app/";
         
-        let response = await fetch ("https://remotestorage-e4bbd-default-rtdb.europe-west1.firebasedatabase.app/Lizensdaten", {
+        let response = await fetch ("https://remotestorage-e4bbd-default-rtdb.firebaseio.com/Lizensdaten.json", {
             method: "PUT", // oder "POST", je nachdem was der Server erlaubt
             headers: {
                 "Content-Type": "application/json"
@@ -36,11 +36,13 @@ async function uploadJson(licenseList) {
 
 async function init() {
     try {
-        // let proxyUrl = "https://cors-anywhere.herokuapp.com/";
-        // let targetUrl = "https://marco-roessler.developerakademie.net/Eigenes/Lizensmanager/license-management/json/licenseData.json";
-        let response = await fetch("https://remotestorage-e4bbd-default-rtdb.europe-west1.firebasedatabase.app/Lizensdaten");
+        let response = await fetch("https://remotestorage-e4bbd-default-rtdb.europe-west1.firebasedatabase.app/Lizensdaten.json");
+        if (!response.ok) {
+            throw new Error(`HTTP-Fehler: ${response.status} ${response.statusText}`);
+        }
         let data = await response.json();
-        console.log(data);
+        licenseList.push(data);
+        console.log("Lizenzdaten geladen:", licenseList);
     } catch (error) {
         console.error("Fehler beim Laden oder Verarbeiten der Lizenzdaten:", error.message);
     }
@@ -52,25 +54,26 @@ function createAllHtmlContainer() {
     createLimitedContent();
     createForm();
     createSearchForm();
-    createSearchLicenseListButton();
+    createSearchLicenseButton();
     createGoBackButton();
     createFooter();
     createSafeToServerButton();
     createLoadFromServerButton();
 }
 
-function addLicense(event) {
+function addLicense(event, data) {
     event.preventDefault();
     let licenseName = document.getElementById("name").value.trim().toLowerCase();
     let licenseExpieryDate = document.getElementById("date").value.trim().toLowerCase();
     let licenseOwner = document.getElementById("owner").value.trim().toLowerCase();
-    let licenseObject = {
+    data = {
         name: licenseName,
         expieryDate: licenseExpieryDate,
         owner: licenseOwner
     }
-    licenseList.push(licenseObject);
-    localStorage.setItem("licenseList", JSON.stringify(licenseList));
+    licenseList[0].push(data);
+    console.log(licenseList)
+    // localStorage.setItem("licenseList", JSON.stringify(licenseList));
     // let licenseList = JSON.parse(JSON.stringify(licenseList));
     uploadJson(licenseList);
     createInfoText();
