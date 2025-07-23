@@ -1,10 +1,9 @@
 let licenseList = [];
 
-
 async function uploadJson(licenseList) {
     try {
-        let response = await fetch ("https://license-api.o-komik.workers.dev/", {
-            method: "PUT", // oder "POST", je nachdem was der Server erlaubt
+        let response = await fetch ("https://license-api.o-komik.workers.dev", {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -18,18 +17,6 @@ async function uploadJson(licenseList) {
         console.error("Fehler beim Hochladen der Lizenzdaten:", error.message);
     }
 }
-
-// function init() {
-//    try{
-//       let licenseFromLicenseList = localStorage.getItem("licenseList");
-//       licenseList = licenseFromLicenseList ? JSON.parse(licenseFromLicenseList) :[];
-//    }catch (error){
-//       console.warn("No license found in local Storage.");
-//       licenseList = [];
-//    }
-
-//    createAllHtmlContainer();
-// }
 
 async function init() {
     try {
