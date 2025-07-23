@@ -3,10 +3,7 @@ let licenseList = [];
 
 async function uploadJson(licenseList) {
     try {
-        // const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-        // const targetUrl = "https://remotestorage-e4bbd-default-rtdb.europe-west1.firebasedatabase.app/";
-        
-        let response = await fetch ("https://remotestorage-e4bbd-default-rtdb.firebaseio.com/Lizensdaten.json", {
+        let response = await fetch ("https://license-api.o-komik.workers.dev/", {
             method: "PUT", // oder "POST", je nachdem was der Server erlaubt
             headers: {
                 "Content-Type": "application/json"
@@ -36,7 +33,7 @@ async function uploadJson(licenseList) {
 
 async function init() {
     try {
-        let response = await fetch("https://remotestorage-e4bbd-default-rtdb.europe-west1.firebasedatabase.app/Lizensdaten.json");
+        let response = await fetch("https://license-api.o-komik.workers.dev/");
         if (!response.ok) {
             throw new Error(`HTTP-Fehler: ${response.status} ${response.statusText}`);
         }
