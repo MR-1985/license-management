@@ -1,8 +1,8 @@
 name = "license-api"
 main = "index.js"
-compatibility_date = "2025-07-23"
+compatibility_date = "2025-07-24"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "datenbank_lizenzen"
-database_id = "9b78b2cb-e4e9-4188-af11-43a696a8f339"
+database_name = "licenses"
+database_id = "f46b63f2-37c3-444d-bfc6-8dca2b223c76"
