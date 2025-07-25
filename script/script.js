@@ -48,17 +48,15 @@ function createAllHtmlContainer() {
 function addLicense(event) {
     event.preventDefault();
     let licenseName = document.getElementById("name").value.trim().toLowerCase();
-    let licenseExpieryDate = document.getElementById("date").value.trim().toLowerCase();
+    let licenseExpiryDate = document.getElementById("date").value.trim().toLowerCase();
     let licenseOwner = document.getElementById("owner").value.trim().toLowerCase();
     let newLicense = {
         name: licenseName,
-        expieryDate: licenseExpieryDate,
+        expiryDate: licenseExpiryDate,
         owner: licenseOwner
     }
     licenseList.push(newLicense);
     console.log(licenseList)
-    // localStorage.setItem("licenseList", JSON.stringify(licenseList));
-    // let licenseList = JSON.parse(JSON.stringify(licenseList));
     uploadJson(newLicense);
     createInfoText();
 }
@@ -66,7 +64,7 @@ function addLicense(event) {
 function searchLicense(event) {
     event.preventDefault();
     let searchName = document.getElementById("searchLicense").value.trim().toLowerCase();
-    let searchExpieryDate = document.getElementById("searchDate").value.trim().toLowerCase();
+    let searchExpiryDate = document.getElementById("searchDate").value.trim().toLowerCase();
     let searchOwner = document.getElementById("searchOwner").value.trim().toLowerCase();
     if (!licenseList || licenseList.length === 0) {
         alert("No license in the Database");
@@ -76,9 +74,9 @@ function searchLicense(event) {
     try {
         let filteredLicenses = licenseList.filter(license => {
             let nameMatch = searchName === "" || license.name.toLowerCase().includes(searchName);
-            let expieryDateMatch = searchExpieryDate === "" || license.expieryDate.toLowerCase().includes(searchExpieryDate);
+            let expiryDateMatch = searchExpiryDate === "" || license.expiryDate.toLowerCase().includes(searchExpiryDate);
             let ownerMatch = searchOwner === "" || license.owner.toLowerCase().includes(searchOwner);
-            return nameMatch && expieryDateMatch && ownerMatch;
+            return nameMatch && expiryDateMatch && ownerMatch;
         });
         if (filteredLicenses.length === 0) {
             alert("No licenses found with the given criteria.");
