@@ -69,7 +69,7 @@ function createSafeToServerButton(){
     createSafeToServerButton.id = "saveToPc";
     createSafeToServerButton.className = "save-to-server-button";
     createSafeToServerButton.innerHTML = "Save to server";
-    createSafeToServerButton.onclick = saveToServer;
+    // createSafeToServerButton.onclick = saveToServer;
     document.getElementById("body").appendChild(createSafeToServerButton);
 }
 
@@ -78,11 +78,11 @@ function createLoadFromServerButton(){
     fileInput.type = "file";
     fileInput.accept = ".json";
     fileInput.style.display = "none";
-    fileInput.onchange = importFromServer;
+    // fileInput.onchange = importFromServer;
     const button = document.createElement("button");
     button.innerText = "Load actual License";
     button.className = "save-to-server-button";
-    button.onclick = () => fileInput.click();
+    // button.onclick = () => fileInput.click();
     document.body.appendChild(fileInput);
     document.getElementById("body").appendChild(button);
 }
