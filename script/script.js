@@ -76,7 +76,7 @@ function searchLicense(event) {
     try {
         let filteredLicenses = licenseList.filter(license => {
             let nameMatch = searchName === "" || license.name.toLowerCase().includes(searchName);
-            let expieryDateMatch = searchExpieryDate === "" || license.date.toLowerCase().includes(searchExpieryDate);
+            let expieryDateMatch = searchExpieryDate === "" || license.expieryDate.toLowerCase().includes(searchExpieryDate);
             let ownerMatch = searchOwner === "" || license.owner.toLowerCase().includes(searchOwner);
             return nameMatch && expieryDateMatch && ownerMatch;
         });
