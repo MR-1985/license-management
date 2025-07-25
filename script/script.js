@@ -2,7 +2,7 @@ let licenseList = [];
 
 async function uploadJson(newLicense) {
     try {
-        let response = await fetch ("https://license-api.o-komik.workers.dev/api/licenses-for-licens-management/licenses", {
+        let response = await fetch ("https://license-api.o-komik.workers.dev/api/licenses", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -20,7 +20,7 @@ async function uploadJson(newLicense) {
 
 async function init() {
     try {
-        let response = await fetch("https://license-api.o-komik.workers.dev/api/licenses-for-licens-management/licenses");
+        let response = await fetch("https://license-api.o-komik.workers.dev/api/licenses");
         if (!response.ok) {
             throw new Error(`HTTP-Fehler: ${response.status} ${response.statusText}`);
         }
@@ -101,36 +101,36 @@ function toggleSearchForm() {
     document.getElementById("licenseSearchForm").reset();
 }
 
-function saveToServer() {
-    let dataStr = JSON.stringify(licenseList);
-    let blob = new Blob([dataStr], { type: "application/json" });
-    let url = URL.createObjectURL(blob);
-    let a = document.createElement("a");
-    a.href = url;
-    a.download = "licenseData.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-};
+// function saveToServer() {
+//     let dataStr = JSON.stringify(licenseList);
+//     let blob = new Blob([dataStr], { type: "application/json" });
+//     let url = URL.createObjectURL(blob);
+//     let a = document.createElement("a");
+//     a.href = url;
+//     a.download = "licenseData.json";
+//     document.body.appendChild(a);
+//     a.click();
+//     document.body.removeChild(a);
+// };
 
-function importFromServer(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        try {
-            const data = JSON.parse(e.target.result);
-            if (Array.isArray(data)) {
-                localStorage.setItem("licenseList", JSON.stringify(data));
-                licenseList = data;
-                alert("Import erfolgreich. Lizenzen wurden geladen.");
-            } else {
-                alert("Ungültiges Datenformat.");
-            }
-        } catch (err) {
-            alert("Fehler beim Lesen der Datei.");
-            console.error(err);
-        }
-    };
-    reader.readAsText(file);
-}
+// function importFromServer(event) {
+//     const file = event.target.files[0];
+//     if (!file) return;
+//     const reader = new FileReader();
+//     reader.onload = function (e) {
+//         try {
+//             const data = JSON.parse(e.target.result);
+//             if (Array.isArray(data)) {
+//                 localStorage.setItem("licenseList", JSON.stringify(data));
+//                 licenseList = data;
+//                 alert("Import erfolgreich. Lizenzen wurden geladen.");
+//             } else {
+//                 alert("Ungültiges Datenformat.");
+//             }
+//         } catch (err) {
+//             alert("Fehler beim Lesen der Datei.");
+//             console.error(err);
+//         }
+//     };
+//     reader.readAsText(file);
+// }
