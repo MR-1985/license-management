@@ -1,4 +1,4 @@
-body{
+body {
     margin: 0;
     padding: 0;
     background-color: #f0f0f0;
@@ -7,7 +7,7 @@ body{
     align-items: center;
 }
 
-.header{
+.header {
     background-color: #f5f5f5;
     padding: 10px 0;
     border-bottom: 1px solid #ddd;
@@ -33,7 +33,7 @@ body{
     max-width: 280px;
     margin: 0 auto;
     padding: 20px;
-    height: calc(100vh - 255px);
+    height: calc(100vh - 183px);
 }
 
 .license-form {
@@ -48,10 +48,10 @@ body{
     font-weight: bold;
     color: #333;
     text-transform: uppercase;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.license-form input{
+.license-form input {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -96,6 +96,21 @@ body{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.allAvailableLicensesContainer {
+    background-color: #f5f5f5;
+    padding: 10px 0;
+    border-top: 1px solid #ddd;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0);
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .footer {
     background-color: #f5f5f5;
     padding: 10px 0;
@@ -122,7 +137,7 @@ body{
     color: #fff;
     font-size: 10px;
     cursor: pointer;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     margin-top: 4px;
     width: 82px;
     color: #afa6a6;

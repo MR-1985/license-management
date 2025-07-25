@@ -1,4 +1,4 @@
-function formTemplate(){
+function formTemplate() {
     return `
     <label for="name">License Name:</label>
     <input type="text" id="name" name="name" required placeholder="Enter new license">
@@ -10,7 +10,7 @@ function formTemplate(){
     `
 }
 
-function searchFormTemplate(){
+function searchFormTemplate() {
     return `
     <label for="name">Search license:</label>
     <input type="text" id="searchLicense" name="searchlicense" placeholder="Enter license name">
@@ -19,5 +19,14 @@ function searchFormTemplate(){
     <label for="owner">Search Owner:</label>
     <input type="text" id="searchOwner" name="owner" placeholder="Enter the owner">
     <button type="submit" id="search-button">Search license</button>
+    `
+}
+
+function allAvailableLicensesContainerTemplate(license) {
+    return `
+    <p><strong>Name:</strong> ${license.name}</p>
+            <p><strong>Expiry Date:</strong> ${license.expiryDate}</p>
+            <p><strong>Owner:</strong> ${license.owner}</p>
+            <hr>
     `
 }

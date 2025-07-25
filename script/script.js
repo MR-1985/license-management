@@ -1,8 +1,8 @@
 let licenseList = [];
 
-async function uploadJson(newLicense) {
+async function uploadToServer(newLicense) {
     try {
-        let response = await fetch ("https://license-api.o-komik.workers.dev/api/licenses", {
+        let response = await fetch("https://license-api.o-komik.workers.dev/api/licenses", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -40,9 +40,8 @@ function createAllHtmlContainer() {
     createSearchForm();
     createSearchLicenseButton();
     createGoBackButton();
+    createAllAvailableLicensesContainer();
     createFooter();
-    createSafeToServerButton();
-    createLoadFromServerButton();
 }
 
 function addLicense(event) {
@@ -57,80 +56,88 @@ function addLicense(event) {
     }
     licenseList.push(newLicense);
     console.log(licenseList)
-    uploadJson(newLicense);
+    uploadToServer(newLicense);
     createInfoText();
 }
 
 function searchLicense(event) {
     event.preventDefault();
-    let searchName = document.getElementById("searchLicense").value.trim().toLowerCase();
-    let searchExpiryDate = document.getElementById("searchDate").value.trim().toLowerCase();
-    let searchOwner = document.getElementById("searchOwner").value.trim().toLowerCase();
+    checkLisenceList();
+    filterLicenseList();
+    document.getElementById("licenseSearchForm").reset();
+}
+
+function checkLisenceList() {
     if (!licenseList || licenseList.length === 0) {
         alert("No license in the Database");
         document.getElementById("licenseSearchForm").reset();
         return;
     }
+}
+
+function filterLicenseList() {
+    const searchedValues = getSearchedValues();
     try {
-        let filteredLicenses = licenseList.filter(license => {
-            let nameMatch = searchName === "" || license.name.toLowerCase().includes(searchName);
-            let expiryDateMatch = searchExpiryDate === "" || license.expiryDate.toLowerCase().includes(searchExpiryDate);
-            let ownerMatch = searchOwner === "" || license.owner.toLowerCase().includes(searchOwner);
-            return nameMatch && expiryDateMatch && ownerMatch;
-        });
-        if (filteredLicenses.length === 0) {
-            alert("No licenses found with the given criteria.");
-            document.getElementById("licenseSearchForm").reset();
+        const filtered = filterLicenses(searchedValues)
+        if (filtered.length === 0) {
+            handleNoResults();
             return;
         }
-        console.table(filteredLicenses);
+        showFilteredLicenses(filtered);
     } catch (error) {
-        alert("No license in the Database:", error);
-        document.getElementById("licenseSearchForm").reset();
-        return
+        handleError(error);
     }
+}
+
+function getSearchedValues() {
+    return {
+        name: document.getElementById("searchLicense").value.trim().toLowerCase(),
+        expiryDate: document.getElementById("searchDate").value.trim().toLowerCase(),
+        owner: document.getElementById("searchOwner").value.trim().toLowerCase()
+    };
+}
+
+function filterLicenses({ name, expiryDate, owner }) {
+    return licenseList.filter(license => {
+        const nameMatch = name === "" || license.name.toLowerCase().includes(name);
+        const expiryMatch = expiryDate === "" || license.expiryDate.toLowerCase().includes(expiryDate);
+        const ownerMatch = owner === "" || license.owner.toLowerCase().includes(owner);
+        return nameMatch && expiryMatch && ownerMatch;
+    });
+}
+
+function handleNoResults() {
+    alert("No licenses found with the given criteria.");
     document.getElementById("licenseSearchForm").reset();
+}
+
+function handleError(error) {
+    console.error("Fehler beim Filtern:", error);
+    alert("Fehler bei der Lizenzsuche. Bitte versuchen Sie es erneut.");
+    document.getElementById("licenseSearchForm").reset();
+}
+
+function showFilteredLicenses(filteredLicenses) {
+    document.getElementById("allAvailableLicensesContainer").classList.remove("d-none");
+    document.getElementById("allAvailableLicensesContainer").innerHTML = "";
+
+    filteredLicenses.forEach(license => {
+        document.getElementById("allAvailableLicensesContainer").innerHTML += allAvailableLicensesContainerTemplate(license);
+    })
+
+    console.table(filteredLicenses);
 }
 
 function toggleSearchForm() {
     document.getElementById("licenseForm").classList.toggle("d-none");
     document.getElementById("searchLicenseButton").classList.toggle("d-none");
     document.getElementById("licenseForm").reset();
-    document.getElementById("licenseSearchForm").classList.toggle("d-none");
     document.getElementById("goBackButton").classList.toggle("d-none");
+    document.getElementById("licenseSearchForm").classList.toggle("d-none");
     document.getElementById("licenseSearchForm").reset();
 }
 
-// function saveToServer() {
-//     let dataStr = JSON.stringify(licenseList);
-//     let blob = new Blob([dataStr], { type: "application/json" });
-//     let url = URL.createObjectURL(blob);
-//     let a = document.createElement("a");
-//     a.href = url;
-//     a.download = "licenseData.json";
-//     document.body.appendChild(a);
-//     a.click();
-//     document.body.removeChild(a);
-// };
-
-// function importFromServer(event) {
-//     const file = event.target.files[0];
-//     if (!file) return;
-//     const reader = new FileReader();
-//     reader.onload = function (e) {
-//         try {
-//             const data = JSON.parse(e.target.result);
-//             if (Array.isArray(data)) {
-//                 localStorage.setItem("licenseList", JSON.stringify(data));
-//                 licenseList = data;
-//                 alert("Import erfolgreich. Lizenzen wurden geladen.");
-//             } else {
-//                 alert("Ungültiges Datenformat.");
-//             }
-//         } catch (err) {
-//             alert("Fehler beim Lesen der Datei.");
-//             console.error(err);
-//         }
-//     };
-//     reader.readAsText(file);
-// }
+function removeDnone() {
+    document.getElementById("allAvailableLicensesContainer").classList.add("d-done");
+    document.getElementById("allAvailableLicensesContainer").innerHTML = "";
+}
