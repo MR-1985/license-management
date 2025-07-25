@@ -1,13 +1,13 @@
 let licenseList = [];
 
-async function uploadJson(licenseList) {
+async function uploadJson(newLicense) {
     try {
         let response = await fetch ("https://license-api.o-komik.workers.dev/api/licenses", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(licenseList)
+            body: JSON.stringify(newLicense)
         });
         if (!response.ok) {
             throw new Error(`Upload fehlgeschlagen: ${response.status}`);
@@ -25,7 +25,7 @@ async function init() {
             throw new Error(`HTTP-Fehler: ${response.status} ${response.statusText}`);
         }
         let data = await response.json();
-        licenseList.push(data);
+        licenseList = data;
         console.log("Lizenzdaten geladen:", licenseList);
     } catch (error) {
         console.error("Fehler beim Laden oder Verarbeiten der Lizenzdaten:", error.message);
@@ -45,21 +45,21 @@ function createAllHtmlContainer() {
     createLoadFromServerButton();
 }
 
-function addLicense(event, data) {
+function addLicense(event) {
     event.preventDefault();
     let licenseName = document.getElementById("name").value.trim().toLowerCase();
     let licenseExpieryDate = document.getElementById("date").value.trim().toLowerCase();
     let licenseOwner = document.getElementById("owner").value.trim().toLowerCase();
-    data = {
+    let newLicense = {
         name: licenseName,
         expieryDate: licenseExpieryDate,
         owner: licenseOwner
     }
-    licenseList[0].push(data);
+    licenseList.push(newLicense);
     console.log(licenseList)
     // localStorage.setItem("licenseList", JSON.stringify(licenseList));
     // let licenseList = JSON.parse(JSON.stringify(licenseList));
-    uploadJson(licenseList);
+    uploadJson(newLicense);
     createInfoText();
 }
 
