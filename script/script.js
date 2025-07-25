@@ -2,7 +2,7 @@ let licenseList = [];
 
 async function uploadJson(newLicense) {
     try {
-        let response = await fetch ("https://license-api.o-komik.workers.dev/api/licenses", {
+        let response = await fetch ("https://https://license-api.o-komik.workers.dev/api/licenses-for-license-management/licenses", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -20,7 +20,7 @@ async function uploadJson(newLicense) {
 
 async function init() {
     try {
-        let response = await fetch("https://license-api.o-komik.workers.dev/api/licenses");
+        let response = await fetch("https://https://license-api.o-komik.workers.dev/api/licenses-for-license-management/licenses");
         if (!response.ok) {
             throw new Error(`HTTP-Fehler: ${response.status} ${response.statusText}`);
         }
