@@ -38,7 +38,10 @@ function createAllHtmlContainer() {
     createLimitedContent();
     createForm();
     createSearchForm();
+    createChangeForm();
     createSearchLicenseButton();
+    createChangeLicenseButton();
+    createAddLicenseButton();
     createGoBackButton();
     createAllAvailableLicensesContainer();
     createFooter();
@@ -65,6 +68,10 @@ function searchLicense(event) {
     checkLisenceList();
     filterLicenseList();
     document.getElementById("licenseSearchForm").reset();
+}
+
+function changeLicense(event) {
+    event.preventDefault();
 }
 
 function checkLisenceList() {
@@ -128,13 +135,22 @@ function showFilteredLicenses(filteredLicenses) {
     console.table(filteredLicenses);
 }
 
-function toggleSearchForm() {
+function toggleFromAddToSearchForm() {
     document.getElementById("licenseForm").classList.toggle("d-none");
-    document.getElementById("searchLicenseButton").classList.toggle("d-none");
     document.getElementById("licenseForm").reset();
+    document.getElementById("searchLicenseButton").classList.toggle("d-none");
     document.getElementById("goBackButton").classList.toggle("d-none");
     document.getElementById("licenseSearchForm").classList.toggle("d-none");
     document.getElementById("licenseSearchForm").reset();
+}
+
+function toggleFromAddToChangeForm(){
+    document.getElementById("licenseForm").classList.toggle("d-none");
+    document.getElementById("licenseForm").reset();
+    document.getElementById("changeLicenseButton").classList.toggle("d-none");
+    document.getElementById("addLicenseButton").classList.toggle("d-none");
+    document.getElementById("licenseChangeForm").classList.toggle("d-none");
+    document.getElementById("licenseChangeForm").reset();
 }
 
 function removeDnone() {

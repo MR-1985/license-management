@@ -22,6 +22,18 @@ function searchFormTemplate() {
     `
 }
 
+function changeFormTemplate(){
+    return `
+    <label for="name">Change License Name:</label>
+    <input type="text" id="changeName" name="changeName" required placeholder="Enter new license">
+    <label for="expiry date">Change Expiery date:</label>
+    <input type="date" id="changeDate" name="changeDate" required placeholder="Enter expiery date">
+    <label for="user">Change Owner:</label>
+    <input type="text" id="changeOwner" name="changeOwner" required placeholder="Enter the owner">
+    <button type="submit" id="change-button">Change license</button>
+    `
+}
+
 function allAvailableLicensesContainerTemplate(license) {
     return `
     <p><strong>Name:</strong> ${license.name}</p>
