@@ -40,7 +40,7 @@ function createChangeLicenseButton() {
 function createGoBackButton() {
     let goBackButton = document.createElement("button");
     goBackButton.id = "goBackButton";
-    // goBackButton.className = "d-none";
+    goBackButton.className = "d-none";
     goBackButton.innerHTML = "Go Back";
     goBackButton.onclick = function () {
         toggleFromAddToSearchForm();
@@ -54,7 +54,7 @@ function createAddLicenseButton() {
     addLicenseButton.id = "addLicenseButton";
     addLicenseButton.className = "d-none";
     addLicenseButton.innerHTML = "Add License";
-    addLicenseButton.onclick = toggleFromChangeToAddForm;
+    addLicenseButton.onclick = toggleFromAddToChangeForm;
     document.getElementById("limitedContent").appendChild(addLicenseButton);
 }
 

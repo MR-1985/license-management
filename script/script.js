@@ -142,6 +142,7 @@ function toggleFromAddToSearchForm() {
     document.getElementById("goBackButton").classList.toggle("d-none");
     document.getElementById("licenseSearchForm").classList.toggle("d-none");
     document.getElementById("licenseSearchForm").reset();
+    document.getElementById("changeLicenseButton").classList.toggle("d-none");
 }
 
 function toggleFromAddToChangeForm(){
@@ -149,8 +150,20 @@ function toggleFromAddToChangeForm(){
     document.getElementById("licenseForm").reset();
     document.getElementById("changeLicenseButton").classList.toggle("d-none");
     document.getElementById("addLicenseButton").classList.toggle("d-none");
+    document.getElementById("searchLicenseButton").classList.toggle("d-none");
     document.getElementById("licenseChangeForm").classList.toggle("d-none");
     document.getElementById("licenseChangeForm").reset();
+}
+
+function toggleFromChangeToAddSearch() {
+    document.getElementById("licenseChangeForm").classList.toggle("d-none");
+    document.getElementById("licenseChangeForm").reset();
+    document.getElementById("changeLicenseButton").classList.toggle("d-none");
+    document.getElementById("addLicenseButton").classList.toggle("d-none");
+    document.getElementById("licenseForm").classList.toggle("d-none");
+    document.getElementById("licenseForm").reset();
+    document.getElementById("searchLicenseButton").classList.toggle("d-none");
+    document.getElementById("goBackButton").classList.toggle("d-none");
 }
 
 function removeDnone() {
