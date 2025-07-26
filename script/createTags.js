@@ -44,9 +44,21 @@ function createGoBackButton() {
     goBackButton.innerHTML = "Go Back";
     goBackButton.onclick = function () {
         toggleFromAddToSearchForm();
-        removeDnone();
+        toggleallAvailableLicensesContainer();
     };
     document.getElementById("limitedContent").appendChild(goBackButton);
+}
+
+function createBackButton(){
+    let backButton = document.createElement("button");
+    backButton.id = "backButton";
+    backButton.className = "d-none";
+    backButton.innerHTML = "Back";
+    backButton.onclick = function () {
+        toggleToAdd();
+        toggleallAvailableLicensesContainer();
+    };
+    document.getElementById("limitedContent").appendChild(backButton);
 }
 
 function createAddLicenseButton() {
