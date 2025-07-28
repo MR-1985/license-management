@@ -49,15 +49,15 @@ function changeFormTemplate(){
 function allAvailableLicensesContainerTemplate(license) {
     return `
     <hr>
-    <p><strong>Name:</strong> ${license?.name ? license.name.toUpperCase() : ''}</p>
-    <p><strong>Expiry Date:</strong> ${license?.expiryDate || ''}</p>
-    <p><strong>Owner:</strong> ${license?.owner ? license.owner.charAt(0).toUpperCase() + license.owner.slice(1) : ''}</p>
-    <p><strong>Dongel ID:</strong> ${license?.dongelId || ''}</p>
+    <p><strong>Name:</strong> ${license?.License_Name ? license.License_Name.toUpperCase() : ''}</p>
+    <p><strong>Expiry Date:</strong> ${license?.Expiry_Date || ''}</p>
+    <p><strong>Owner:</strong> ${license?.User ? license.User.charAt(0).toUpperCase() + license.User.slice(1) : ''}</p>
+    <p><strong>Dongel ID:</strong> ${license?.Dongle_ID || ''}</p>
     <p><strong>Affiliation:</strong> ${
-        license?.affiliation
-            ? (/[a-zA-Z]/.test(license.affiliation) 
-                ? license.affiliation.toUpperCase() 
-                : license.affiliation)
+        license?.Affiliation
+            ? (/[a-zA-Z]/.test(license.Affiliation) 
+                ? license.Affiliation.toUpperCase() 
+                : license.Affiliation)
             : ''
     }</p>
     <hr>

@@ -56,11 +56,11 @@ function addLicense(event) {
     let licenseDongelId = document.getElementById("dongelId").value.trim().toLowerCase();
     let licenseAffiliation = document.getElementById("affiliation").value.trim().toLowerCase();
     let newLicense = {
-        name: licenseName,
-        expiryDate: licenseExpiryDate,
-        owner: licenseOwner,
-        dongelId: licenseDongelId,
-        affiliation: licenseAffiliation
+        License_Name: licenseName,
+        Expiry_Date: licenseExpiryDate,
+        User: licenseOwner,
+        Dongle_ID: licenseDongelId,
+        Affiliation: licenseAffiliation
     }
     licenseList.push(newLicense);
     console.log(licenseList)
@@ -106,18 +106,22 @@ function filterLicenseList() {
 
 function getSearchedValues() {
     return {
-        name: document.getElementById("searchLicense").value.trim().toLowerCase(),
-        expiryDate: document.getElementById("searchDate").value.trim().toLowerCase(),
-        owner: document.getElementById("searchOwner").value.trim().toLowerCase()
+        License_Name: document.getElementById("searchLicense").value.trim().toLowerCase(),
+        Expiry_Date: document.getElementById("searchDate").value.trim().toLowerCase(),
+        User: document.getElementById("searchOwner").value.trim().toLowerCase(),
+        Dongle_ID: document.getElementById("searchDongelId").value.trim().toLowerCase(),
+        Affiliation: document.getElementById("searchAffiliation").value.trim().toLowerCase()
     };
 }
 
-function filterLicenses({ name, expiryDate, owner }) {
+function filterLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affiliation }) {
     return licenseList.filter(license => {
-        const nameMatch = name === "" || license.name.toLowerCase().includes(name);
-        const expiryMatch = expiryDate === "" || license.expiryDate.toLowerCase().includes(expiryDate);
-        const ownerMatch = owner === "" || license.owner.toLowerCase().includes(owner);
-        return nameMatch && expiryMatch && ownerMatch;
+        const nameMatch = License_Name === "" || license.License_Name.toLowerCase().includes(License_Name);
+        const expiryMatch = Expiry_Date === "" || license.Expiry_Date.toLowerCase().includes(Expiry_Date);
+        const ownerMatch = User === "" || license.User.toLowerCase().includes(User);
+        const dongleIdMatch = Dongle_ID === "" || license.Dongle_ID.toLowerCase().includes(Dongle_ID);
+        const affiliationMatch = Affiliation === "" || license.Affiliation.toLowerCase().includes
+        return nameMatch && expiryMatch && ownerMatch && dongleIdMatch && affiliationMatch;
     });
 }
 
