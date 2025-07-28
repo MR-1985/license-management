@@ -34,7 +34,7 @@ body {
     width: 100%;
     margin: 0 auto;
     padding-top: 20px;
-    height: calc(100vh - 183px);
+    height: calc(100vh - 163px);
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -43,8 +43,8 @@ body {
 .license-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 3px;
+    margin-bottom: 5px;
 }
 
 .license-form label {

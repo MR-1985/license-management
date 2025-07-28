@@ -40,21 +40,21 @@ function createAllHtmlContainer() {
     createSearchForm();
     createChangeForm();
     createSearchLicenseButton();
-    createChangeLicenseButton();
+    createFromAddToChangeButton();
     createAddLicenseButton();
-    createGoBackButton();
-    createBackButton();
-    createAllAvailableLicensesContainer();
+    createGoBackToAddButton();
+    createBackToSearchButton();
+    createLicenseContainer();
     createFooter();
 }
 
 function addLicense(event) {
     event.preventDefault();
-    let licenseName = document.getElementById("name").value.trim().toLowerCase();
-    let licenseExpiryDate = document.getElementById("date").value.trim().toLowerCase();
-    let licenseOwner = document.getElementById("owner").value.trim().toLowerCase();
-    let licenseDongelId = document.getElementById("dongelId").value.trim().toLowerCase();
-    let licenseAffiliation = document.getElementById("affiliation").value.trim().toLowerCase();
+    let licenseName = document.getElementById("License_Name").value.trim().toLowerCase();
+    let licenseOwner = document.getElementById("User").value.trim().toLowerCase();
+    let licenseExpiryDate = document.getElementById("Expiry_Date").value.trim().toLowerCase();
+    let licenseDongelId = document.getElementById("Dongel_ID").value.trim().toLowerCase();
+    let licenseAffiliation = document.getElementById("Affiliation").value.trim().toLowerCase();
     let newLicense = {
         License_Name: licenseName,
         Expiry_Date: licenseExpiryDate,
@@ -63,16 +63,16 @@ function addLicense(event) {
         Affiliation: licenseAffiliation
     }
     licenseList.push(newLicense);
-    console.log(licenseList)
+    
     uploadToServer(newLicense);
     createInfoText();
 }
 
 function searchLicense(event) {
     event.preventDefault();
-    document.getElementById("licenseSearchForm").classList.add("d-none");
-    document.getElementById("goBackButton").classList.add("d-none");
-    document.getElementById("backButton").classList.remove("d-none");
+    document.getElementById("licenseSearchForm").classList.add("d-none");//verschwindet
+    document.getElementById("goBackToAddButton").classList.add("d-none");//verschwindet
+    document.getElementById("backToSearchButton").classList.remove("d-none");
     checkLisenceList();
     filterLicenseList();
     document.getElementById("licenseSearchForm").reset();
@@ -106,11 +106,11 @@ function filterLicenseList() {
 
 function getSearchedValues() {
     return {
-        License_Name: document.getElementById("searchLicense").value.trim().toLowerCase(),
-        Expiry_Date: document.getElementById("searchDate").value.trim().toLowerCase(),
-        User: document.getElementById("searchOwner").value.trim().toLowerCase(),
-        Dongle_ID: document.getElementById("searchDongelId").value.trim().toLowerCase(),
-        Affiliation: document.getElementById("searchAffiliation").value.trim().toLowerCase()
+        License_Name: document.getElementById("Search_License_Name").value.trim().toLowerCase(),
+        Expiry_Date: document.getElementById("Search_Expiry_Date").value.trim().toLowerCase(),
+        User: document.getElementById("Search_User").value.trim().toLowerCase(),
+        Dongle_ID: document.getElementById("Search_Dongel_ID").value.trim().toLowerCase(),
+        Affiliation: document.getElementById("Search_Affiliation").value.trim().toLowerCase()
     };
 }
 
@@ -120,7 +120,7 @@ function filterLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affiliatio
         const expiryMatch = Expiry_Date === "" || license.Expiry_Date.toLowerCase().includes(Expiry_Date);
         const ownerMatch = User === "" || license.User.toLowerCase().includes(User);
         const dongleIdMatch = Dongle_ID === "" || license.Dongle_ID.toLowerCase().includes(Dongle_ID);
-        const affiliationMatch = Affiliation === "" || license.Affiliation.toLowerCase().includes
+        const affiliationMatch = Affiliation === "" || license.Affiliation.toLowerCase().includes(Affiliation);
         return nameMatch && expiryMatch && ownerMatch && dongleIdMatch && affiliationMatch;
     });
 }
@@ -137,45 +137,58 @@ function handleError(error) {
 }
 
 function showFilteredLicenses(filteredLicenses) {
-    document.getElementById("allAvailableLicensesContainer").classList.remove("d-none");
-    document.getElementById("allAvailableLicensesContainer").innerHTML = "";
+    document.getElementById("licenseContainer").classList.remove("d-none");
+    document.getElementById("licenseContainer").innerHTML = "";
 
     filteredLicenses.forEach(license => {
-        document.getElementById("allAvailableLicensesContainer").innerHTML += allAvailableLicensesContainerTemplate(license);
+        document.getElementById("licenseContainer").innerHTML += licenseContainerTemplate(license);
     })
 
     console.table(filteredLicenses);
 }
 
-function toggleFromAddToSearchForm() {
-    document.getElementById("licenseForm").classList.toggle("d-none");
+function fromAddToSearchForm() {
+    document.getElementById("licenseForm").classList.add("d-none");//lässt verschwinden
     document.getElementById("licenseForm").reset();
-    document.getElementById("searchLicenseButton").classList.toggle("d-none");
-    document.getElementById("goBackButton").classList.toggle("d-none");
-    document.getElementById("licenseSearchForm").classList.toggle("d-none");
+    document.getElementById("searchLicenseButton").classList.add("d-none");//war von Anfang an sichtbar
+    document.getElementById("goBackToAddButton").classList.remove("d-none");
+    document.getElementById("licenseSearchForm").classList.remove("d-none");
     document.getElementById("licenseSearchForm").reset();
-    document.getElementById("changeLicenseButton").classList.toggle("d-none");
+    document.getElementById("fromAddToChangeButton").classList.add("d-none");//war von Anfang an sichtbar
 }
 
-function toggleFromAddToChangeForm(){
-    document.getElementById("licenseForm").classList.toggle("d-none");
+function fromSearchToAddForm(){
+    document.getElementById("licenseSearchForm").classList.add("d-none");
+    document.getElementById("licenseSearchForm").reset();
+    document.getElementById("goBackToAddButton").classList.add("d-none");
+    document.getElementById("searchLicenseButton").classList.remove("d-none");
+    document.getElementById("fromAddToChangeButton").classList.remove("d-none");
+    document.getElementById("licenseForm").classList.remove("d-none");
     document.getElementById("licenseForm").reset();
-    document.getElementById("changeLicenseButton").classList.toggle("d-none");
-    document.getElementById("addLicenseButton").classList.toggle("d-none");
-    document.getElementById("searchLicenseButton").classList.toggle("d-none");
-    document.getElementById("licenseChangeForm").classList.toggle("d-none");
+}
+
+function fromAddToChange(){
+    document.getElementById("licenseForm").classList.add("d-none");
+    document.getElementById("licenseForm").reset();
+    document.getElementById("fromAddToChangeButton").classList.add("d-none");
+    document.getElementById("addLicenseButton").classList.add("d-none");
+    document.getElementById("searchLicenseButton").classList.add("d-none");
+    document.getElementById("licenseChangeForm").classList.add("d-none");
     document.getElementById("licenseChangeForm").reset();
+    document.getElementById("licenseSearchForm").classList.add("d-none");
+    document.getElementById("licenseSearchForm").reset();
 }
 
 function toggleFromChangeToAddSearch() {
     document.getElementById("licenseChangeForm").classList.toggle("d-none");
     document.getElementById("licenseChangeForm").reset();
-    document.getElementById("changeLicenseButton").classList.toggle("d-none");
+    document.getElementById("fromAddToChangeButton").classList.toggle("d-none");
     document.getElementById("addLicenseButton").classList.toggle("d-none");
     document.getElementById("licenseForm").classList.toggle("d-none");
     document.getElementById("licenseForm").reset();
     document.getElementById("searchLicenseButton").classList.toggle("d-none");
-    document.getElementById("goBackButton").classList.toggle("d-none");
+    document.getElementById("backToSearchButton").classList.toggle("d-none");
+    document.getElementById("limitedContainer").classList.add("flex-direction");
 }
 
 function toggleToAdd() {
@@ -183,12 +196,16 @@ function toggleToAdd() {
     document.getElementById("licenseChangeForm").classList.add("d-none");
     document.getElementById("licenseForm").classList.remove("d-none");
     document.getElementById("searchLicenseButton").classList.remove("d-none");
-    document.getElementById("changeLicenseButton").classList.remove("d-none");
+    document.getElementById("fromAddToChangeButton").classList.remove("d-none");
     document.getElementById("addLicenseButton").classList.add("d-none");
-    document.getElementById("backButton").classList.add("d-none");
+    document.getElementById("backToSearchButton").classList.add("d-none");
 }
 
-function toggleallAvailableLicensesContainer() {
-    document.getElementById("allAvailableLicensesContainer").classList.add("d-done");
-    document.getElementById("allAvailableLicensesContainer").innerHTML = "";
+function removeLicenseContainer() {
+    document.getElementById("licenseContainer").classList.add("d-done");
+    document.getElementById("licenseContainer").innerHTML = "";
+    document.getElementById("licenseSearchForm").classList.remove("d-none");
+    document.getElementById("licenseSearchForm").reset();
+    document.getElementById("goBackToAddButton").classList.remove("d-none");
+    document.getElementById("backToSearchButton").classList.add("d-none");
 }

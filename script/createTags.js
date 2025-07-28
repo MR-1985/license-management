@@ -24,41 +24,41 @@ function createForm() {
 function createSearchLicenseButton() {
     let searchLicenseButton = document.createElement("button");
     searchLicenseButton.id = "searchLicenseButton";
+    searchLicenseButton.className = "";
     searchLicenseButton.innerHTML = "Search License";
-    searchLicenseButton.onclick = toggleFromAddToSearchForm;
+    searchLicenseButton.onclick = fromAddToSearchForm;
     document.getElementById("limitedContent").appendChild(searchLicenseButton);
 }
 
-function createChangeLicenseButton() {
-    let changeLicenseButton = document.createElement("button");
-    changeLicenseButton.id = "changeLicenseButton";
-    changeLicenseButton.innerHTML = "Change License";
-    changeLicenseButton.onclick = toggleFromAddToChangeForm;
-    document.getElementById("limitedContent").appendChild(changeLicenseButton);
+function createFromAddToChangeButton() {
+    let fromAddToChangeButton = document.createElement("button");
+    fromAddToChangeButton.id = "fromAddToChangeButton";
+    fromAddToChangeButton.className = "";
+    fromAddToChangeButton.innerHTML = "Change License";
+    fromAddToChangeButton.onclick = fromAddToChange;
+    document.getElementById("limitedContent").appendChild(fromAddToChangeButton);
 }
 
-function createGoBackButton() {
-    let goBackButton = document.createElement("button");
-    goBackButton.id = "goBackButton";
-    goBackButton.className = "d-none";
-    goBackButton.innerHTML = "Go Back";
-    goBackButton.onclick = function () {
-        toggleFromAddToSearchForm();
-        toggleallAvailableLicensesContainer();
+function createGoBackToAddButton() {
+    let goBackToAddButton = document.createElement("button");
+    goBackToAddButton.id = "goBackToAddButton";
+    goBackToAddButton.className = "d-none";
+    goBackToAddButton.innerHTML = "Go back to add licenses";
+    goBackToAddButton.onclick = function () {
+        fromSearchToAddForm();
     };
-    document.getElementById("limitedContent").appendChild(goBackButton);
+    document.getElementById("limitedContent").appendChild(goBackToAddButton);
 }
 
-function createBackButton(){
-    let backButton = document.createElement("button");
-    backButton.id = "backButton";
-    backButton.className = "d-none";
-    backButton.innerHTML = "Back";
-    backButton.onclick = function () {
-        toggleToAdd();
-        toggleallAvailableLicensesContainer();
+function createBackToSearchButton(){
+    let backToSearchButton = document.createElement("button");
+    backToSearchButton.id = "backToSearchButton";
+    backToSearchButton.className = "d-none";
+    backToSearchButton.innerHTML = "Go back to search licenses";
+    backToSearchButton.onclick = function () {
+        removeLicenseContainer();
     };
-    document.getElementById("limitedContent").appendChild(backButton);
+    document.getElementById("limitedContent").appendChild(backToSearchButton);
 }
 
 function createAddLicenseButton() {
@@ -66,7 +66,7 @@ function createAddLicenseButton() {
     addLicenseButton.id = "addLicenseButton";
     addLicenseButton.className = "d-none";
     addLicenseButton.innerHTML = "Add License";
-    addLicenseButton.onclick = toggleFromAddToChangeForm;
+    addLicenseButton.onclick = addLicense;
     document.getElementById("limitedContent").appendChild(addLicenseButton);
 }
 
@@ -90,12 +90,12 @@ function createSearchForm() {
     document.getElementById("limitedContent").appendChild(searchForm);
 }
 
-function createAllAvailableLicensesContainer() {
-    let allAvailableLicensesContainer = document.createElement("div");
-    allAvailableLicensesContainer.id = "allAvailableLicensesContainer";
-    allAvailableLicensesContainer.className = "allAvailableLicensesContainer";
-    allAvailableLicensesContainer.innerHTML = "";
-    document.getElementById("limitedContent").appendChild(allAvailableLicensesContainer);
+function createLicenseContainer() {
+    let licenseContainer = document.createElement("div");
+    licenseContainer.id = "licenseContainer";
+    licenseContainer.className = "licenseContainer d-none";
+    licenseContainer.innerHTML = "";
+    document.getElementById("limitedContent").appendChild(licenseContainer);
 }
 
 function createChangeForm() {
