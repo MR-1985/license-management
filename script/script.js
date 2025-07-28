@@ -53,10 +53,14 @@ function addLicense(event) {
     let licenseName = document.getElementById("name").value.trim().toLowerCase();
     let licenseExpiryDate = document.getElementById("date").value.trim().toLowerCase();
     let licenseOwner = document.getElementById("owner").value.trim().toLowerCase();
+    let licenseDongelId = document.getElementById("dongelId").value.trim().toLowerCase();
+    let licenseAffiliation = document.getElementById("affiliation").value.trim().toLowerCase();
     let newLicense = {
         name: licenseName,
         expiryDate: licenseExpiryDate,
-        owner: licenseOwner
+        owner: licenseOwner,
+        dongelId: licenseDongelId,
+        affiliation: licenseAffiliation
     }
     licenseList.push(newLicense);
     console.log(licenseList)

@@ -33,7 +33,7 @@ body {
     max-width: 400px;
     width: 100%;
     margin: 0 auto;
-    padding: 20px;
+    padding-top: 20px;
     height: calc(100vh - 183px);
     display: flex;
     flex-direction: column;
