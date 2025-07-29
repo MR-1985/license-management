@@ -1,21 +1,18 @@
 let licenseList = [];
 
-async function uploadToServer(newLicense) {
-    try {
-        let response = await fetch("https://license-api.o-komik.workers.dev/api/licenses", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newLicense)
-        });
-        if (!response.ok) {
-            throw new Error(`Upload fehlgeschlagen: ${response.status}`);
-        }
-        console.log("Daten erfolgreich hochgeladen");
-    } catch (error) {
-        console.error("Fehler beim Hochladen der Lizenzdaten:", error.message);
-    }
+function createAllHtmlContainer() {
+    createHeader();
+    createLimitedContent();
+    createForm();
+    createSearchForm();
+    createChangeForm();
+    createSearchLicenseButton();
+    createLicenseContainer();
+    createFromSearchToAddButton();
+    createBackToSearchButton();
+    createFromAddToChangeButton();
+    createFromChangeToAddButton();
+    createFooter();
 }
 
 async function init() {
@@ -31,21 +28,6 @@ async function init() {
         console.error("Fehler beim Laden oder Verarbeiten der Lizenzdaten:", error.message);
     }
     createAllHtmlContainer();
-}
-
-function createAllHtmlContainer() {
-    createHeader();
-    createLimitedContent();
-    createForm();
-    createSearchForm();
-    createChangeForm();
-    createSearchLicenseButton();
-    createLicenseContainer();
-    createFromSearchToAddButton();
-    createBackToSearchButton();
-    createFromAddToChangeButton();
-    createFromChangeToAddButton();
-    createFooter();
 }
 
 function addLicense(event) {
@@ -68,6 +50,24 @@ function addLicense(event) {
     createInfoText();
 }
 
+async function uploadToServer(newLicense) {
+    try {
+        let response = await fetch("https://license-api.o-komik.workers.dev/api/licenses", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newLicense)
+        });
+        if (!response.ok) {
+            throw new Error(`Upload fehlgeschlagen: ${response.status}`);
+        }
+        console.log("Daten erfolgreich hochgeladen");
+    } catch (error) {
+        console.error("Fehler beim Hochladen der Lizenzdaten:", error.message);
+    }
+}
+
 function searchLicense(event) {
     event.preventDefault();
     document.getElementById("searchForm").classList.add("d-none");
@@ -76,10 +76,6 @@ function searchLicense(event) {
     checkLisenceList();
     filterLicenseList();
     document.getElementById("searchForm").reset();
-}
-
-function changeLicense(event) {
-    event.preventDefault();
 }
 
 function checkLisenceList() {
@@ -125,17 +121,6 @@ function filterLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affiliatio
     });
 }
 
-function handleNoResults() {
-    alert("No licenses found with the given criteria.");
-    document.getElementById("searchForm").reset();
-}
-
-function handleError(error) {
-    console.error("Fehler beim Filtern:", error);
-    alert("Fehler bei der Lizenzsuche. Bitte versuchen Sie es erneut.");
-    document.getElementById("searchForm").reset();
-}
-
 function showFilteredLicenses(filteredLicenses) {
     document.getElementById("licenseContainer").classList.remove("d-none");
     document.getElementById("licenseContainer").innerHTML = "";
@@ -145,6 +130,115 @@ function showFilteredLicenses(filteredLicenses) {
     })
 
     console.table(filteredLicenses);
+}
+
+function fillTheChangeForm() {
+    checkLisenceList();
+    filtered = filterOldLicenseList();
+    if (filtered) {
+        fillFormWithFilteredLicenses(filtered)
+    }
+}
+
+function filterOldLicenseList() {
+    const searchedValues = getSearchedOldValues();
+    try {
+        const filtered = filterOldLicenses(searchedValues)
+        if (filtered.length === 0) {
+            handleNoResults();
+            return;
+        }
+        fillFormWithFilteredLicenses(filtered);
+        return filtered;
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+function getSearchedOldValues() {
+    return {
+        License_Name: document.getElementById("Change_License_Name").value.trim().toLowerCase(),
+        Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim().toLowerCase(),
+        User: document.getElementById("Change_User").value.trim().toLowerCase(),
+        Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase(),
+        Affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase()
+    };
+}
+
+function filterOldLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affiliation }) {
+    return licenseList.filter(license => {
+        const nameMatch = License_Name === "" || license.License_Name.toLowerCase().includes(License_Name);
+        const expiryMatch = Expiry_Date === "" || license.Expiry_Date.toLowerCase().includes(Expiry_Date);
+        const ownerMatch = User === "" || license.User.toLowerCase().includes(User);
+        const dongleIdMatch = Dongle_ID === "" || license.Dongle_ID.toLowerCase().includes(Dongle_ID);
+        const affiliationMatch = Affiliation === "" || license.Affiliation.toLowerCase().includes(Affiliation);
+        return nameMatch && expiryMatch && ownerMatch && dongleIdMatch && affiliationMatch;
+    });
+}
+
+function fillFormWithFilteredLicenses(filteredLicenses) {
+    if (filteredLicenses.length === 0) return;
+    const license = filteredLicenses[0]; // nur der erste Treffer
+    document.getElementById("Change_License_Name").value = license.License_Name;
+    document.getElementById("Change_Expiry_Date").value = license.Expiry_Date;
+    document.getElementById("Change_User").value = license.User;
+    document.getElementById("Change_Dongle_ID").value = license.Dongle_ID;
+    document.getElementById("Change_Affiliation").value = license.Affiliation;
+
+    console.log("Formular mit vorhandenen Lizenzdaten ausgefüllt:", license);
+}
+
+async function uploadNewDataToDataBase() {
+    const updatedData = {
+        License_Name: document.getElementById("Change_License_Name").value.trim(),
+        Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim(),
+        User: document.getElementById("Change_User").value.trim(),
+        Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim(),
+        Affiliation: document.getElementById("Change_Affiliation").value.trim()
+    };
+    try {
+   const url = `https://license-api.o-komik.workers.dev/api/licenses/${updatedData.License_Name}/${updatedData.Dongle_ID}`;
+
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedData)
+    });
+
+    const contentType = response.headers.get("content-type");
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Patch fehlgeschlagen (${response.status}): ${errorText}`);
+    }
+
+    if (contentType && contentType.includes("application/json")) {
+      const result = await response.json();
+      console.log("PATCH erfolgreich:", result);
+      return result;
+    } else {
+      const text = await response.text();
+      console.warn("Antwort war kein JSON:", text);
+      return text;
+    }
+
+  } catch (error) {
+    console.error("Fehler beim PATCH:", error.message);
+    throw error;
+  }
+}
+
+function handleNoResults() {
+    alert("No licenses found with the given criteria.");
+    document.getElementById("searchForm").reset();
+}
+
+function handleError(error) {
+    console.error("Fehler beim Filtern:", error);
+    alert("Fehler bei der Lizenzsuche. Bitte versuchen Sie es erneut.");
+    document.getElementById("searchForm").reset();
 }
 
 function fromAddToSearchForm() {
@@ -195,3 +289,7 @@ function removeLicenseContainer() {
     document.getElementById("fromSearchToAddButton").classList.remove("d-none");
     document.getElementById("backToSearchButton").classList.add("d-none");
 }
+
+// function changeLicense(event) {
+//     event.preventDefault();
+// }

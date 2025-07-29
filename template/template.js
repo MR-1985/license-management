@@ -32,16 +32,17 @@ function searchFormTemplate() {
 
 function changeFormTemplate(){
     return `
-    <label for="Change_License_Name">License Name:</label>
-    <input type="text" id="Change_License_Name" name="name" placeholder="Which license do you want to change?">
-    <label for="Change_Expiry_Date">Expiery date:</label>
+    <label for="Change_License_Name">Change License Name (Required Fild):</label>
+    <input style="border-color:red;" type="text" id="Change_License_Name" name="name" required placeholder="Which license do you want to change?">
+    <label for="Change_Expiry_Date">Change Expiery date:</label>
     <input type="date" id="Change_Expiry_Date" name="date" placeholder="Enter new expiery date" title="Enter new expiery date">
     <label for="Change_User">Owner:</label>
-    <input type="text" id="Change_User" name="owner" placeholder="Which user do you want to change?">
-    <label for="Change_Dongel_ID">Dongel ID:</label>
-    <input type="text" id="Change_Dongel_ID" name="dongelId" placeholder="Which dongel ID do you want to change?">
-    <label for="Change_Affiliation">affiliation:</label>
-    <input type="text" id="Change_Affiliation" name="affiliation" placeholder="Which affiliation do you want to change?">
+    <input type="text" id="Change_User" name="owner" placeholder="Enter new user">
+    <label for="Change_Dongle_ID">Change Dongel ID (Required Fild):</label>
+    <input style="border-color:red;" type="text" id="Change_Dongle_ID" name="dongelId" required placeholder="Which dongel ID do you want to change?">
+    <label for="Change_Affiliation">Change affiliation:</label>
+    <input type="text" id="Change_Affiliation" name="affiliation" placeholder="Enter new affiliation">
+    <button type="button" id="fill-form-button" onclick="fillTheChangeForm()">Fill the form</button>
     <button type="submit" id="change-button">Change license</button>
     `
 }
