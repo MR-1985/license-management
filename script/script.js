@@ -221,13 +221,16 @@ async function uploadNewDataToDataBase() {
     } else {
       const text = await response.text();
       console.warn("Antwort war kein JSON:", text);
+      document.getElementById("licenseChangeForm").reset();
       return text;
+      
     }
 
   } catch (error) {
     console.error("Fehler beim PATCH:", error.message);
     throw error;
   }
+  
 }
 
 function handleNoResults() {
