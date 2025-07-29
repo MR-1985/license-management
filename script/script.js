@@ -85,7 +85,7 @@ function changeLicense(event) {
 function checkLisenceList() {
     if (!licenseList || licenseList.length === 0) {
         alert("No license in the Database");
-        document.getElementById("licenseSearchForm").reset();
+        document.getElementById("searchForm").reset();
         return;
     }
 }
@@ -127,13 +127,13 @@ function filterLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affiliatio
 
 function handleNoResults() {
     alert("No licenses found with the given criteria.");
-    document.getElementById("licenseSearchForm").reset();
+    document.getElementById("searchForm").reset();
 }
 
 function handleError(error) {
     console.error("Fehler beim Filtern:", error);
     alert("Fehler bei der Lizenzsuche. Bitte versuchen Sie es erneut.");
-    document.getElementById("licenseSearchForm").reset();
+    document.getElementById("searchForm").reset();
 }
 
 function showFilteredLicenses(filteredLicenses) {
@@ -170,7 +170,7 @@ function fromSearchToAddForm(){
 function fromAddToChange(){
     document.getElementById("licenseForm").classList.add("d-none");
     document.getElementById("licenseForm").reset();
-    document.getElementById("searchLicenseButton").classList.add("d-none");
+    // document.getElementById("searchLicenseButton").classList.add("d-none");
     document.getElementById("fromAddToChangeButton").classList.add("d-none");
     document.getElementById("fromChangeToAddButton").classList.remove("d-none");
     document.getElementById("licenseChangeForm").classList.remove("d-none");
