@@ -40,11 +40,11 @@ function createAllHtmlContainer() {
     createSearchForm();
     createChangeForm();
     createSearchLicenseButton();
-    createFromAddToChangeButton();
-    createAddLicenseButton();
-    createGoBackToAddButton();
-    createBackToSearchButton();
     createLicenseContainer();
+    createFromSearchToAddButton();
+    createBackToSearchButton();
+    createFromAddToChangeButton();
+    createFromChangeToAddButton();
     createFooter();
 }
 
@@ -70,12 +70,12 @@ function addLicense(event) {
 
 function searchLicense(event) {
     event.preventDefault();
-    document.getElementById("licenseSearchForm").classList.add("d-none");//verschwindet
-    document.getElementById("goBackToAddButton").classList.add("d-none");//verschwindet
+    document.getElementById("searchForm").classList.add("d-none");
+    document.getElementById("fromSearchToAddButton").classList.add("d-none");
     document.getElementById("backToSearchButton").classList.remove("d-none");
     checkLisenceList();
     filterLicenseList();
-    document.getElementById("licenseSearchForm").reset();
+    document.getElementById("searchForm").reset();
 }
 
 function changeLicense(event) {
@@ -148,19 +148,19 @@ function showFilteredLicenses(filteredLicenses) {
 }
 
 function fromAddToSearchForm() {
-    document.getElementById("licenseForm").classList.add("d-none");//lässt verschwinden
+    document.getElementById("licenseForm").classList.add("d-none");
     document.getElementById("licenseForm").reset();
-    document.getElementById("searchLicenseButton").classList.add("d-none");//war von Anfang an sichtbar
-    document.getElementById("goBackToAddButton").classList.remove("d-none");
-    document.getElementById("licenseSearchForm").classList.remove("d-none");
-    document.getElementById("licenseSearchForm").reset();
-    document.getElementById("fromAddToChangeButton").classList.add("d-none");//war von Anfang an sichtbar
+    document.getElementById("searchForm").classList.remove("d-none");
+    document.getElementById("searchForm").reset();
+    document.getElementById("searchLicenseButton").classList.add("d-none");
+    document.getElementById("fromAddToChangeButton").classList.add("d-none");
+    document.getElementById("fromSearchToAddButton").classList.remove("d-none");
 }
 
 function fromSearchToAddForm(){
-    document.getElementById("licenseSearchForm").classList.add("d-none");
-    document.getElementById("licenseSearchForm").reset();
-    document.getElementById("goBackToAddButton").classList.add("d-none");
+    document.getElementById("searchForm").classList.add("d-none");
+    document.getElementById("searchForm").reset();
+    document.getElementById("fromSearchToAddButton").classList.add("d-none");
     document.getElementById("searchLicenseButton").classList.remove("d-none");
     document.getElementById("fromAddToChangeButton").classList.remove("d-none");
     document.getElementById("licenseForm").classList.remove("d-none");
@@ -170,42 +170,28 @@ function fromSearchToAddForm(){
 function fromAddToChange(){
     document.getElementById("licenseForm").classList.add("d-none");
     document.getElementById("licenseForm").reset();
-    document.getElementById("fromAddToChangeButton").classList.add("d-none");
-    document.getElementById("addLicenseButton").classList.add("d-none");
     document.getElementById("searchLicenseButton").classList.add("d-none");
-    document.getElementById("licenseChangeForm").classList.add("d-none");
+    document.getElementById("fromAddToChangeButton").classList.add("d-none");
+    document.getElementById("fromChangeToAddButton").classList.remove("d-none");
+    document.getElementById("licenseChangeForm").classList.remove("d-none");
     document.getElementById("licenseChangeForm").reset();
-    document.getElementById("licenseSearchForm").classList.add("d-none");
-    document.getElementById("licenseSearchForm").reset();
 }
 
-function toggleFromChangeToAddSearch() {
-    document.getElementById("licenseChangeForm").classList.toggle("d-none");
-    document.getElementById("licenseChangeForm").reset();
-    document.getElementById("fromAddToChangeButton").classList.toggle("d-none");
-    document.getElementById("addLicenseButton").classList.toggle("d-none");
-    document.getElementById("licenseForm").classList.toggle("d-none");
-    document.getElementById("licenseForm").reset();
-    document.getElementById("searchLicenseButton").classList.toggle("d-none");
-    document.getElementById("backToSearchButton").classList.toggle("d-none");
-    document.getElementById("limitedContainer").classList.add("flex-direction");
-}
-
-function toggleToAdd() {
-    document.getElementById("licenseSearchForm").classList.add("d-none");
+function fromChangeToAdd() {
     document.getElementById("licenseChangeForm").classList.add("d-none");
-    document.getElementById("licenseForm").classList.remove("d-none");
-    document.getElementById("searchLicenseButton").classList.remove("d-none");
+    document.getElementById("licenseChangeForm").reset();
     document.getElementById("fromAddToChangeButton").classList.remove("d-none");
-    document.getElementById("addLicenseButton").classList.add("d-none");
-    document.getElementById("backToSearchButton").classList.add("d-none");
+    document.getElementById("searchLicenseButton").classList.remove("d-none");
+    document.getElementById("fromChangeToAddButton").classList.add("d-none");
+    document.getElementById("licenseForm").classList.remove("d-none");
+    document.getElementById("licenseForm").reset();
 }
 
 function removeLicenseContainer() {
     document.getElementById("licenseContainer").classList.add("d-done");
     document.getElementById("licenseContainer").innerHTML = "";
-    document.getElementById("licenseSearchForm").classList.remove("d-none");
-    document.getElementById("licenseSearchForm").reset();
-    document.getElementById("goBackToAddButton").classList.remove("d-none");
+    document.getElementById("searchForm").classList.remove("d-none");
+    document.getElementById("searchForm").reset();
+    document.getElementById("fromSearchToAddButton").classList.remove("d-none");
     document.getElementById("backToSearchButton").classList.add("d-none");
 }

@@ -24,7 +24,7 @@ function createForm() {
 function createSearchLicenseButton() {
     let searchLicenseButton = document.createElement("button");
     searchLicenseButton.id = "searchLicenseButton";
-    searchLicenseButton.className = "";
+    searchLicenseButton.className = "btn";
     searchLicenseButton.innerHTML = "Search License";
     searchLicenseButton.onclick = fromAddToSearchForm;
     document.getElementById("limitedContent").appendChild(searchLicenseButton);
@@ -33,27 +33,27 @@ function createSearchLicenseButton() {
 function createFromAddToChangeButton() {
     let fromAddToChangeButton = document.createElement("button");
     fromAddToChangeButton.id = "fromAddToChangeButton";
-    fromAddToChangeButton.className = "";
+    fromAddToChangeButton.className = "fromAddToChangeButton btn";
     fromAddToChangeButton.innerHTML = "Change License";
     fromAddToChangeButton.onclick = fromAddToChange;
     document.getElementById("limitedContent").appendChild(fromAddToChangeButton);
 }
 
-function createGoBackToAddButton() {
-    let goBackToAddButton = document.createElement("button");
-    goBackToAddButton.id = "goBackToAddButton";
-    goBackToAddButton.className = "d-none";
-    goBackToAddButton.innerHTML = "Go back to add licenses";
-    goBackToAddButton.onclick = function () {
+function createFromSearchToAddButton() {
+    let fromSearchToAddButton = document.createElement("button");
+    fromSearchToAddButton.id = "fromSearchToAddButton";
+    fromSearchToAddButton.className = "d-none btn";
+    fromSearchToAddButton.innerHTML = "Go back to add licenses";
+    fromSearchToAddButton.onclick = function () {
         fromSearchToAddForm();
     };
-    document.getElementById("limitedContent").appendChild(goBackToAddButton);
+    document.getElementById("limitedContent").appendChild(fromSearchToAddButton);
 }
 
-function createBackToSearchButton(){
+function createBackToSearchButton() {
     let backToSearchButton = document.createElement("button");
     backToSearchButton.id = "backToSearchButton";
-    backToSearchButton.className = "d-none";
+    backToSearchButton.className = "d-none btn";
     backToSearchButton.innerHTML = "Go back to search licenses";
     backToSearchButton.onclick = function () {
         removeLicenseContainer();
@@ -61,13 +61,13 @@ function createBackToSearchButton(){
     document.getElementById("limitedContent").appendChild(backToSearchButton);
 }
 
-function createAddLicenseButton() {
-    let addLicenseButton = document.createElement("button");
-    addLicenseButton.id = "addLicenseButton";
-    addLicenseButton.className = "d-none";
-    addLicenseButton.innerHTML = "Add License";
-    addLicenseButton.onclick = addLicense;
-    document.getElementById("limitedContent").appendChild(addLicenseButton);
+function createFromChangeToAddButton() {
+    let fromChangeToAddButton = document.createElement("button");
+    fromChangeToAddButton.id = "fromChangeToAddButton";
+    fromChangeToAddButton.className = "d-none btn";
+    fromChangeToAddButton.innerHTML = "Go back to add licenses";
+    fromChangeToAddButton.onclick = fromChangeToAdd
+    document.getElementById("limitedContent").appendChild(fromChangeToAddButton);
 }
 
 function createInfoText() {
@@ -83,7 +83,7 @@ function createInfoText() {
 
 function createSearchForm() {
     let searchForm = document.createElement("form");
-    searchForm.id = "licenseSearchForm";
+    searchForm.id = "searchForm";
     searchForm.className = "license-form d-none";
     searchForm.innerHTML = searchFormTemplate();
     searchForm.onsubmit = searchLicense;
