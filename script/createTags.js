@@ -103,9 +103,9 @@ function createChangeForm() {
     changeForm.id = "licenseChangeForm";
     changeForm.className = "license-form d-none";
     changeForm.innerHTML = changeFormTemplate();
-    changeForm.onsubmit = function () {
-        // event.preventDefault();
-        uploadNewDataToDataBase();
+    changeForm.onsubmit = function (event) {
+        event.preventDefault();
+        uploadNewDataToDataBase(event);
     }
     document.getElementById("limitedContent").appendChild(changeForm);
 }

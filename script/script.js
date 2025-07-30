@@ -34,17 +34,17 @@ function addLicense(event) {
     let licenseName = document.getElementById("License_Name").value.trim().toLowerCase();
     let licenseOwner = document.getElementById("User").value.trim().toLowerCase();
     let licenseExpiryDate = document.getElementById("Expiry_Date").value.trim().toLowerCase();
-    let licenseDongelId = document.getElementById("Dongel_ID").value.trim().toLowerCase();
+    let licenseDongleId = document.getElementById("Dongle_ID").value.trim().toLowerCase();
     let licenseAffiliation = document.getElementById("Affiliation").value.trim().toLowerCase();
     let newLicense = {
         License_Name: licenseName,
         Expiry_Date: licenseExpiryDate,
         User: licenseOwner,
-        Dongle_ID: licenseDongelId,
+        Dongle_ID: licenseDongleId,
         Affiliation: licenseAffiliation
     }
     licenseList.push(newLicense);
-    
+
     uploadToServer(newLicense);
     createInfoText();
 }
@@ -104,7 +104,7 @@ function getSearchedValues() {
         License_Name: document.getElementById("Search_License_Name").value.trim().toLowerCase(),
         Expiry_Date: document.getElementById("Search_Expiry_Date").value.trim().toLowerCase(),
         User: document.getElementById("Search_User").value.trim().toLowerCase(),
-        Dongle_ID: document.getElementById("Search_Dongel_ID").value.trim().toLowerCase(),
+        Dongle_ID: document.getElementById("Search_Dongle_ID").value.trim().toLowerCase(),
         Affiliation: document.getElementById("Search_Affiliation").value.trim().toLowerCase()
     };
 }
@@ -178,40 +178,59 @@ function filterOldLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affilia
 function fillFormWithFilteredLicenses(filteredLicenses) {
     if (filteredLicenses.length === 0) return;
     const license = filteredLicenses[0]; // nur der erste Treffer
-    document.getElementById("Change_License_Name").value = license.License_Name;
+    document.getElementById("Change_License_Name").value = license.License_Name.trim().toLowerCase();
     document.getElementById("Change_Expiry_Date").value = license.Expiry_Date;
-    document.getElementById("Change_User").value = license.User;
-    document.getElementById("Change_Dongle_ID").value = license.Dongle_ID;
-    document.getElementById("Change_Affiliation").value = license.Affiliation;
-
+    document.getElementById("Change_User").value = license.User.trim().toLowerCase();
+    document.getElementById("Change_Dongle_ID").value = license.Dongle_ID.trim().toLowerCase();
+    document.getElementById("Change_Affiliation").value = license.Affiliation.trim().toLowerCase();
     console.log("Formular mit vorhandenen Lizenzdaten ausgefüllt:", license);
 }
 
 async function uploadNewDataToDataBase() {
-    const updatedData = {
-        License_Name: document.getElementById("Change_License_Name").value.trim().toLowerCase,
-        Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim().toLowerCase,
-        User: document.getElementById("Change_User").value.trim().toLowerCase,
-        Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase,
-        Affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase
-    };
-    try {
-   const url = `https://license-api.o-komik.workers.dev/api/licenses`;
+  const updatedData = getUpdatedLicenseDataFromForm();
 
-    const response = await fetch(url, {
-      method: 'PATCH',
+  // Überprüfen, ob notwendige Felder gefüllt sind
+  if (!updatedData.filter.License_Name || !updatedData.filter.Dongle_ID) {
+    console.error("Lizenzname oder Dongle-ID fehlen – Patch abgebrochen.");
+    return;
+  }
+
+  await patchLicense(updatedData);
+}
+
+function getUpdatedLicenseDataFromForm() {
+  return {
+    filter: {
+      License_Name: document.getElementById("Change_License_Name").value.trim().toLowerCase(),
+      Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase()
+    },
+    update: {
+      User: document.getElementById("Change_User").value.trim().toLowerCase(),
+      Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim(),
+      Affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase()
+    }
+  };
+}
+
+async function patchLicense(updatedData) {
+    try {
+    const response = await fetch("https://license-api.o-komik.workers.dev/api/licenses", {
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(updatedData)
     });
+
+    const responseText = await response.text();
+
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Patch fehlgeschlagen (${response.status}): ${errorText}`);
+      throw new Error(`Patch fehlgeschlagen (${response.status}): ${responseText}`);
     }
+
+    console.log(`Patch erfolgreich (${response.status}): ${responseText}`);
   } catch (error) {
     console.error("Fehler beim PATCH:", error.message);
-    throw error;
   }
 }
 
@@ -236,7 +255,7 @@ function fromAddToSearchForm() {
     document.getElementById("fromSearchToAddButton").classList.remove("d-none");
 }
 
-function fromSearchToAddForm(){
+function fromSearchToAddForm() {
     document.getElementById("searchForm").classList.add("d-none");
     document.getElementById("searchForm").reset();
     document.getElementById("fromSearchToAddButton").classList.add("d-none");
@@ -246,7 +265,7 @@ function fromSearchToAddForm(){
     document.getElementById("licenseForm").reset();
 }
 
-function fromAddToChange(){
+function fromAddToChange() {
     document.getElementById("licenseForm").classList.add("d-none");
     document.getElementById("licenseForm").reset();
     // document.getElementById("searchLicenseButton").classList.add("d-none");
@@ -274,7 +293,3 @@ function removeLicenseContainer() {
     document.getElementById("fromSearchToAddButton").classList.remove("d-none");
     document.getElementById("backToSearchButton").classList.add("d-none");
 }
-
-// function changeLicense(event) {
-//     event.preventDefault();
-// }
