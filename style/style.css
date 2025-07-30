@@ -34,7 +34,7 @@ body {
     width: 100%;
     margin: 0px 10px 0px 10px;
     padding-top: 20px;
-    height: calc(100vh - 163px);
+    /* height: calc(100vh - 163px); */
     display: flex;
     flex-direction: column;
     gap: 5px;
