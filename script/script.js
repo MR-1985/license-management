@@ -1,5 +1,4 @@
 let licenseList = [];
-
 function createAllHtmlContainer() {
     createHeader();
     createLimitedContent();
