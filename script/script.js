@@ -1,4 +1,5 @@
 let licenseList = [];
+
 function createAllHtmlContainer() {
     createHeader();
     createLimitedContent();
@@ -178,6 +179,7 @@ function filterOldLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affilia
 function fillFormWithFilteredLicenses(filteredLicenses) {
     if (filteredLicenses.length === 0) return;
     const license = filteredLicenses[0]; // nur der erste Treffer
+    document.getElementById("Change_ID").value = license.rowid;
     document.getElementById("Change_License_Name").value = license.License_Name.trim().toLowerCase();
     document.getElementById("Change_Expiry_Date").value = license.Expiry_Date;
     document.getElementById("Change_User").value = license.User.trim().toLowerCase();
@@ -187,15 +189,21 @@ function fillFormWithFilteredLicenses(filteredLicenses) {
 }
 
 async function uploadNewDataToDataBase() {
+    console.log("uploadNewDataToDataBase wurde gestartet");
   const updatedData = getUpdatedLicenseDataFromForm();
 
-  // Überprüfen, ob notwendige Felder gefüllt sind
   if (!updatedData.filter.License_Name || !updatedData.filter.Dongle_ID) {
     console.error("Lizenzname oder Dongle-ID fehlen – Patch abgebrochen.");
     return;
   }
-
-  await patchLicense(updatedData);
+  //--------------to-add------------
+const id = document.getElementById("Change_ID")?.value;
+if (!id) {
+  console.error("Keine ID gefunden – Patch abgebrochen.");
+  return;
+}
+//----------------------------------
+  await patchLicense(updatedData, id);
 }
 
 function getUpdatedLicenseDataFromForm() {
@@ -212,17 +220,19 @@ function getUpdatedLicenseDataFromForm() {
   };
 }
 
-async function patchLicense(updatedData) {
-    try {
-    const response = await fetch("https://license-api.o-komik.workers.dev/api/licenses", {
+async function patchLicense(updatedData, id) {
+  console.log("Patch wird ausgeführt mit ID:", id, "und Daten:", updatedData.update);
+  try {
+    const response = await fetch(`https://license-api.o-komik.workers.dev/api/licenses/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(updatedData)
+      body: JSON.stringify(updatedData.update)
     });
 
     const responseText = await response.text();
+    console.log("Antwort vom Server:", response.status, responseText);
 
     if (!response.ok) {
       throw new Error(`Patch fehlgeschlagen (${response.status}): ${responseText}`);
