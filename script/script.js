@@ -189,14 +189,14 @@ function fillFormWithFilteredLicenses(filteredLicenses) {
 
 async function uploadNewDataToDataBase() {
     const updatedData = {
-        License_Name: document.getElementById("Change_License_Name").value.trim(),
-        Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim(),
-        User: document.getElementById("Change_User").value.trim(),
-        Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim(),
-        Affiliation: document.getElementById("Change_Affiliation").value.trim()
+        License_Name: document.getElementById("Change_License_Name").value.trim().toLowerCase,
+        Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim().toLowerCase,
+        User: document.getElementById("Change_User").value.trim().toLowerCase,
+        Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase,
+        Affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase
     };
     try {
-   const url = `https://license-api.o-komik.workers.dev/api/licenses/${updatedData.License_Name}/${updatedData.Dongle_ID}`;
+   const url = `https://license-api.o-komik.workers.dev/api/licenses`;
 
     const response = await fetch(url, {
       method: 'PATCH',
@@ -205,31 +205,14 @@ async function uploadNewDataToDataBase() {
       },
       body: JSON.stringify(updatedData)
     });
-
-    const contentType = response.headers.get("content-type");
-
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`Patch fehlgeschlagen (${response.status}): ${errorText}`);
     }
-
-    if (contentType && contentType.includes("application/json")) {
-      const result = await response.json();
-      console.log("PATCH erfolgreich:", result);
-      return result;
-    } else {
-      const text = await response.text();
-      console.warn("Antwort war kein JSON:", text);
-      document.getElementById("licenseChangeForm").reset();
-      return text;
-      
-    }
-
   } catch (error) {
     console.error("Fehler beim PATCH:", error.message);
     throw error;
   }
-  
 }
 
 function handleNoResults() {
