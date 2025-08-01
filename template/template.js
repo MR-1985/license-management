@@ -53,6 +53,14 @@ function changeFormTemplate(){
     `
 }
 
+function deleteFormTemplate(){
+    return`
+     <label for="Delete_ID">Delete ID:</label>
+    <input type="text" id="Delete_ID" name="Delete_ID" required placeholder="Enter license ID to delete">
+    <button type="submit" id="delete-button">Delete the license</button>
+    `
+}
+
 function licenseContainerTemplate(license) {
     return `
     <hr>

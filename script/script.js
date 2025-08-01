@@ -6,12 +6,16 @@ function createAllHtmlContainer() {
     createForm();
     createSearchForm();
     createChangeForm();
+    createDeleteForm();
     createSearchLicenseButton();
     createLicenseContainer();
-    createFromSearchToAddButton();
+    // createFromSearchToAddButton();
     createBackToSearchButton();
     createFromAddToChangeButton();
-    createFromChangeToAddButton();
+
+    createFromAddToDeleteButton();
+    // createFromDeleteToAddButton();
+    createHomeButton();
     createFooter();
 }
 
@@ -76,7 +80,7 @@ async function uploadToServer(newLicense) {
 function searchLicense(event) {
     event.preventDefault();
     document.getElementById("searchForm").classList.add("d-none");
-    document.getElementById("fromSearchToAddButton").classList.add("d-none");
+    // document.getElementById("fromSearchToAddButton").classList.add("d-none");
     document.getElementById("backToSearchButton").classList.remove("d-none");
     checkLisenceList();
     filterLicenseList();
@@ -272,6 +276,84 @@ function handleError(error) {
     document.getElementById("searchForm").reset();
 }
 
+async function deleteLicense(id) {
+    console.log("Löschvorgang der ID:", id, "gestartet");
+    try {
+        const response = await fetch(`https://license-api.o-komik.workers.dev/api/licenses/${id}`, {
+            method: "DELETE"
+        });
+        const responseText = await response.text();
+        console.log("Antwort vom Server:", response.status, responseText);
+        if (response.status === 200) {
+            alert("Lizenz erfolgreich gelöscht.");
+            createDeleteInfoText();
+            console.log(`Löschvorgang erfolgreich (${response.status}): ${responseText}`);
+            document.getElementById("licenseDeleteForm").reset();
+        } else if (response.status === 404) {
+            alert("Lizenz nicht gefunden.");
+        } else {
+            alert(`Fehler beim Löschen: ${response.status} - ${responseText}`);
+        }
+    } catch (error) {
+        console.error("Fehler beim DELETE:", error.message);
+        alert(`Verbindungsfehler: ${error.message}`);
+    }
+}
+
+function backToHome() {
+    document.getElementById("searchForm").classList.add("d-none");
+    document.getElementById("searchForm").reset();
+    // document.getElementById("fromSearchToAddButton").classList.add("d-none");
+    document.getElementById("searchLicenseButton").classList.remove("d-none");
+    document.getElementById("fromAddToChangeButton").classList.remove("d-none");
+    document.getElementById("licenseForm").classList.remove("d-none");
+    document.getElementById("licenseForm").reset();
+    document.getElementById("licenseChangeForm").classList.add("d-none");
+    document.getElementById("licenseChangeForm").reset();
+    // document.getElementById("fromChangeToAddButton").classList.add("d-none");
+    document.getElementById("fromAddToDeleteButton").classList.remove("d-none");
+    document.getElementById("licenseDeleteForm").classList.add("d-none");
+    document.getElementById("licenseDeleteForm").reset();
+    // document.getElementById("fromDeleteToAddButton").classList.add("d-none");
+    document.getElementById("homeButton").classList.add("d-none")
+}
+
+// function fromSearchToAdd() {
+//     document.getElementById("searchForm").classList.add("d-none");
+//     document.getElementById("searchForm").reset();
+//     document.getElementById("fromSearchToAddButton").classList.add("d-none");
+//     document.getElementById("searchLicenseButton").classList.remove("d-none");
+//     document.getElementById("fromAddToChangeButton").classList.remove("d-none");
+//     document.getElementById("licenseForm").classList.remove("d-none");
+//     document.getElementById("licenseForm").reset();
+//     document.getElementById("homeButton").classList.add("d-none")
+// }
+
+// function fromChangeToAdd() {
+//     document.getElementById("licenseChangeForm").classList.add("d-none");
+//     document.getElementById("licenseChangeForm").reset();
+//     document.getElementById("fromAddToChangeButton").classList.remove("d-none");
+//     document.getElementById("searchLicenseButton").classList.remove("d-none");
+//     document.getElementById("fromChangeToAddButton").classList.add("d-none");
+//     document.getElementById("licenseForm").classList.remove("d-none");
+//     document.getElementById("licenseForm").reset();
+//     document.getElementById("fromAddToDeleteButton").classList.remove("d-none");
+//     document.getElementById("homeButton").classList.add("d-none")
+// }
+
+// function fromDeleteToAdd(){
+//     document.getElementById("licenseForm").classList.remove("d-none");
+//     document.getElementById("licenseForm").reset();
+//     document.getElementById("licenseDeleteForm").classList.add("d-none");
+//     document.getElementById("licenseDeleteForm").reset();
+//     document.getElementById("searchLicenseButton").classList.remove("d-none");
+//     document.getElementById("fromAddToChangeButton").classList.remove("d-none");
+//     document.getElementById("fromSearchToAddButton").classList.add("d-none");
+//     document.getElementById("fromAddToDeleteButton").classList.remove("d-none");
+//     document.getElementById("fromDeleteToAddButton").classList.add("d-none");
+//     document.getElementById("homeButton").classList.add("d-none")
+// }
+
 function fromAddToSearchForm() {
     document.getElementById("licenseForm").classList.add("d-none");
     document.getElementById("licenseForm").reset();
@@ -279,37 +361,32 @@ function fromAddToSearchForm() {
     document.getElementById("searchForm").reset();
     document.getElementById("searchLicenseButton").classList.add("d-none");
     document.getElementById("fromAddToChangeButton").classList.add("d-none");
-    document.getElementById("fromSearchToAddButton").classList.remove("d-none");
-}
-
-function fromSearchToAddForm() {
-    document.getElementById("searchForm").classList.add("d-none");
-    document.getElementById("searchForm").reset();
-    document.getElementById("fromSearchToAddButton").classList.add("d-none");
-    document.getElementById("searchLicenseButton").classList.remove("d-none");
-    document.getElementById("fromAddToChangeButton").classList.remove("d-none");
-    document.getElementById("licenseForm").classList.remove("d-none");
-    document.getElementById("licenseForm").reset();
+    // document.getElementById("fromSearchToAddButton").classList.add("d-none");
+    document.getElementById("homeButton").classList.remove("d-none")
 }
 
 function fromAddToChange() {
     document.getElementById("licenseForm").classList.add("d-none");
     document.getElementById("licenseForm").reset();
-    // document.getElementById("searchLicenseButton").classList.add("d-none");
     document.getElementById("fromAddToChangeButton").classList.add("d-none");
-    document.getElementById("fromChangeToAddButton").classList.remove("d-none");
+    // document.getElementById("fromChangeToAddButton").classList.add("d-none");
     document.getElementById("licenseChangeForm").classList.remove("d-none");
     document.getElementById("licenseChangeForm").reset();
+    document.getElementById("fromAddToDeleteButton").classList.add("d-none");
+    document.getElementById("homeButton").classList.remove("d-none")
 }
 
-function fromChangeToAdd() {
-    document.getElementById("licenseChangeForm").classList.add("d-none");
-    document.getElementById("licenseChangeForm").reset();
-    document.getElementById("fromAddToChangeButton").classList.remove("d-none");
-    document.getElementById("searchLicenseButton").classList.remove("d-none");
-    document.getElementById("fromChangeToAddButton").classList.add("d-none");
-    document.getElementById("licenseForm").classList.remove("d-none");
+function fromAddToDelete() {
+    document.getElementById("licenseForm").classList.add("d-none");
     document.getElementById("licenseForm").reset();
+    document.getElementById("licenseDeleteForm").classList.remove("d-none");
+    document.getElementById("licenseDeleteForm").reset();
+    document.getElementById("searchLicenseButton").classList.add("d-none");
+    document.getElementById("fromAddToChangeButton").classList.add("d-none");
+    // document.getElementById("fromSearchToAddButton").classList.add("d-none");
+    document.getElementById("fromAddToDeleteButton").classList.add("d-none");
+    // document.getElementById("fromDeleteToAddButton").classList.add("d-none");
+    document.getElementById("homeButton").classList.remove("d-none")
 }
 
 function removeLicenseContainer() {
@@ -317,6 +394,6 @@ function removeLicenseContainer() {
     document.getElementById("licenseContainer").innerHTML = "";
     document.getElementById("searchForm").classList.remove("d-none");
     document.getElementById("searchForm").reset();
-    document.getElementById("fromSearchToAddButton").classList.remove("d-none");
+    // document.getElementById("fromSearchToAddButton").classList.add("d-none");
     document.getElementById("backToSearchButton").classList.add("d-none");
 }
