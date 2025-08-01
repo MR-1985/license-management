@@ -1,53 +1,4 @@
 let licenseList = [];
-function createAllHtmlContainer() {
-    createHeader();
-    createLimitedContent();
-    createForm();
-    createSearchForm();
-    createChangeForm();
-    createSearchLicenseButton();
-    createLicenseContainer();
-    createFromSearchToAddButton();
-    createBackToSearchButton();
-    createFromAddToChangeButton();
-    createFromChangeToAddButton();
-    createFooter();
-}
-
-async function init() {
-    try {
-        let response = await fetch("https://license-api.o-komik.workers.dev/api/licenses");
-        if (!response.ok) {
-            throw new Error(`HTTP-Fehler: ${response.status} ${response.statusText}`);
-        }
-        let data = await response.json();
-        licenseList = data;
-        console.log("Lizenzdaten geladen:", licenseList);
-    } catch (error) {
-        console.error("Fehler beim Laden oder Verarbeiten der Lizenzdaten:", error.message);
-    }
-    createAllHtmlContainer();
-}
-
-function addLicense(event) {
-    event.preventDefault();
-    let licenseName = document.getElementById("License_Name").value.trim().toLowerCase();
-    let licenseOwner = document.getElementById("User").value.trim().toLowerCase();
-    let licenseExpiryDate = document.getElementById("Expiry_Date").value.trim().toLowerCase();
-    let licenseDongelId = document.getElementById("Dongel_ID").value.trim().toLowerCase();
-    let licenseAffiliation = document.getElementById("Affiliation").value.trim().toLowerCase();
-    let newLicense = {
-        License_Name: licenseName,
-        Expiry_Date: licenseExpiryDate,
-        User: licenseOwner,
-        Dongle_ID: licenseDongelId,
-        Affiliation: licenseAffiliation
-    }
-    licenseList.push(newLicense);
-    
-    uploadToServer(newLicense);
-    createInfoText();
-}
 
 async function uploadToServer(newLicense) {
     try {
@@ -67,20 +18,70 @@ async function uploadToServer(newLicense) {
     }
 }
 
+async function init() {
+    try {
+        let response = await fetch("https://license-api.o-komik.workers.dev/api/licenses");
+        if (!response.ok) {
+            throw new Error(`HTTP-Fehler: ${response.status} ${response.statusText}`);
+        }
+        let data = await response.json();
+        licenseList = data;
+        console.log("Lizenzdaten geladen:", licenseList);
+    } catch (error) {
+        console.error("Fehler beim Laden oder Verarbeiten der Lizenzdaten:", error.message);
+    }
+    createAllHtmlContainer();
+}
+
+function createAllHtmlContainer() {
+    createHeader();
+    createLimitedContent();
+    createForm();
+    createSearchForm();
+    createChangeForm();
+    createSearchLicenseButton();
+    createChangeLicenseButton();
+    createAddLicenseButton();
+    createGoBackButton();
+    createBackButton();
+    createAllAvailableLicensesContainer();
+    createFooter();
+}
+
+function addLicense(event) {
+    event.preventDefault();
+    let licenseName = document.getElementById("name").value.trim().toLowerCase();
+    let licenseExpiryDate = document.getElementById("date").value.trim().toLowerCase();
+    let licenseOwner = document.getElementById("owner").value.trim().toLowerCase();
+    let newLicense = {
+        name: licenseName,
+        expiryDate: licenseExpiryDate,
+        owner: licenseOwner
+    }
+    licenseList.push(newLicense);
+    console.log(licenseList)
+    uploadToServer(newLicense);
+    createInfoText();
+}
+
 function searchLicense(event) {
     event.preventDefault();
-    document.getElementById("searchForm").classList.add("d-none");
-    document.getElementById("fromSearchToAddButton").classList.add("d-none");
-    document.getElementById("backToSearchButton").classList.remove("d-none");
+    document.getElementById("licenseSearchForm").classList.add("d-none");
+    document.getElementById("goBackButton").classList.add("d-none");
+    document.getElementById("backButton").classList.remove("d-none");
     checkLisenceList();
     filterLicenseList();
-    document.getElementById("searchForm").reset();
+    document.getElementById("licenseSearchForm").reset();
+}
+
+function changeLicense(event) {
+    event.preventDefault();
 }
 
 function checkLisenceList() {
     if (!licenseList || licenseList.length === 0) {
         alert("No license in the Database");
-        document.getElementById("searchForm").reset();
+        document.getElementById("licenseSearchForm").reset();
         return;
     }
 }
@@ -101,180 +102,85 @@ function filterLicenseList() {
 
 function getSearchedValues() {
     return {
-        License_Name: document.getElementById("Search_License_Name").value.trim().toLowerCase(),
-        Expiry_Date: document.getElementById("Search_Expiry_Date").value.trim().toLowerCase(),
-        User: document.getElementById("Search_User").value.trim().toLowerCase(),
-        Dongle_ID: document.getElementById("Search_Dongel_ID").value.trim().toLowerCase(),
-        Affiliation: document.getElementById("Search_Affiliation").value.trim().toLowerCase()
+        name: document.getElementById("searchLicense").value.trim().toLowerCase(),
+        expiryDate: document.getElementById("searchDate").value.trim().toLowerCase(),
+        owner: document.getElementById("searchOwner").value.trim().toLowerCase()
     };
 }
 
-function filterLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affiliation }) {
+function filterLicenses({ name, expiryDate, owner }) {
     return licenseList.filter(license => {
-        const nameMatch = License_Name === "" || license.License_Name.toLowerCase().includes(License_Name);
-        const expiryMatch = Expiry_Date === "" || license.Expiry_Date.toLowerCase().includes(Expiry_Date);
-        const ownerMatch = User === "" || license.User.toLowerCase().includes(User);
-        const dongleIdMatch = Dongle_ID === "" || license.Dongle_ID.toLowerCase().includes(Dongle_ID);
-        const affiliationMatch = Affiliation === "" || license.Affiliation.toLowerCase().includes(Affiliation);
-        return nameMatch && expiryMatch && ownerMatch && dongleIdMatch && affiliationMatch;
+        const nameMatch = name === "" || license.name.toLowerCase().includes(name);
+        const expiryMatch = expiryDate === "" || license.expiryDate.toLowerCase().includes(expiryDate);
+        const ownerMatch = owner === "" || license.owner.toLowerCase().includes(owner);
+        return nameMatch && expiryMatch && ownerMatch;
     });
-}
-
-function showFilteredLicenses(filteredLicenses) {
-    document.getElementById("licenseContainer").classList.remove("d-none");
-    document.getElementById("licenseContainer").innerHTML = "";
-
-    filteredLicenses.forEach(license => {
-        document.getElementById("licenseContainer").innerHTML += licenseContainerTemplate(license);
-    })
-
-    console.table(filteredLicenses);
-}
-
-function fillTheChangeForm() {
-    checkLisenceList();
-    filtered = filterOldLicenseList();
-    if (filtered) {
-        fillFormWithFilteredLicenses(filtered)
-    }
-}
-
-function filterOldLicenseList() {
-    const searchedValues = getSearchedOldValues();
-    try {
-        const filtered = filterOldLicenses(searchedValues)
-        if (filtered.length === 0) {
-            handleNoResults();
-            return;
-        }
-        fillFormWithFilteredLicenses(filtered);
-        return filtered;
-    } catch (error) {
-        handleError(error);
-    }
-}
-
-function getSearchedOldValues() {
-    return {
-        License_Name: document.getElementById("Change_License_Name").value.trim().toLowerCase(),
-        Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim().toLowerCase(),
-        User: document.getElementById("Change_User").value.trim().toLowerCase(),
-        Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase(),
-        Affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase()
-    };
-}
-
-function filterOldLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affiliation }) {
-    return licenseList.filter(license => {
-        const nameMatch = License_Name === "" || license.License_Name.toLowerCase().includes(License_Name);
-        const expiryMatch = Expiry_Date === "" || license.Expiry_Date.toLowerCase().includes(Expiry_Date);
-        const ownerMatch = User === "" || license.User.toLowerCase().includes(User);
-        const dongleIdMatch = Dongle_ID === "" || license.Dongle_ID.toLowerCase().includes(Dongle_ID);
-        const affiliationMatch = Affiliation === "" || license.Affiliation.toLowerCase().includes(Affiliation);
-        return nameMatch && expiryMatch && ownerMatch && dongleIdMatch && affiliationMatch;
-    });
-}
-
-function fillFormWithFilteredLicenses(filteredLicenses) {
-    if (filteredLicenses.length === 0) return;
-    const license = filteredLicenses[0]; // nur der erste Treffer
-    document.getElementById("Change_License_Name").value = license.License_Name;
-    document.getElementById("Change_Expiry_Date").value = license.Expiry_Date;
-    document.getElementById("Change_User").value = license.User;
-    document.getElementById("Change_Dongle_ID").value = license.Dongle_ID;
-    document.getElementById("Change_Affiliation").value = license.Affiliation;
-
-    console.log("Formular mit vorhandenen Lizenzdaten ausgefüllt:", license);
-}
-
-async function uploadNewDataToDataBase() {
-    const updatedData = {
-        License_Name: document.getElementById("Change_License_Name").value.trim().toLowerCase,
-        Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim().toLowerCase,
-        User: document.getElementById("Change_User").value.trim().toLowerCase,
-        Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase,
-        Affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase
-    };
-    try {
-   const url = `https://license-api.o-komik.workers.dev/api/licenses`;
-
-    const response = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(updatedData)
-    });
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Patch fehlgeschlagen (${response.status}): ${errorText}`);
-    }
-  } catch (error) {
-    console.error("Fehler beim PATCH:", error.message);
-    throw error;
-  }
 }
 
 function handleNoResults() {
     alert("No licenses found with the given criteria.");
-    document.getElementById("searchForm").reset();
+    document.getElementById("licenseSearchForm").reset();
 }
 
 function handleError(error) {
     console.error("Fehler beim Filtern:", error);
     alert("Fehler bei der Lizenzsuche. Bitte versuchen Sie es erneut.");
-    document.getElementById("searchForm").reset();
+    document.getElementById("licenseSearchForm").reset();
 }
 
-function fromAddToSearchForm() {
-    document.getElementById("licenseForm").classList.add("d-none");
-    document.getElementById("licenseForm").reset();
-    document.getElementById("searchForm").classList.remove("d-none");
-    document.getElementById("searchForm").reset();
-    document.getElementById("searchLicenseButton").classList.add("d-none");
-    document.getElementById("fromAddToChangeButton").classList.add("d-none");
-    document.getElementById("fromSearchToAddButton").classList.remove("d-none");
+function showFilteredLicenses(filteredLicenses) {
+    document.getElementById("allAvailableLicensesContainer").classList.remove("d-none");
+    document.getElementById("allAvailableLicensesContainer").innerHTML = "";
+
+    filteredLicenses.forEach(license => {
+        document.getElementById("allAvailableLicensesContainer").innerHTML += allAvailableLicensesContainerTemplate(license);
+    })
+
+    console.table(filteredLicenses);
 }
 
-function fromSearchToAddForm(){
-    document.getElementById("searchForm").classList.add("d-none");
-    document.getElementById("searchForm").reset();
-    document.getElementById("fromSearchToAddButton").classList.add("d-none");
-    document.getElementById("searchLicenseButton").classList.remove("d-none");
-    document.getElementById("fromAddToChangeButton").classList.remove("d-none");
-    document.getElementById("licenseForm").classList.remove("d-none");
+function toggleFromAddToSearchForm() {
+    document.getElementById("licenseForm").classList.toggle("d-none");
     document.getElementById("licenseForm").reset();
+    document.getElementById("searchLicenseButton").classList.toggle("d-none");
+    document.getElementById("goBackButton").classList.toggle("d-none");
+    document.getElementById("licenseSearchForm").classList.toggle("d-none");
+    document.getElementById("licenseSearchForm").reset();
+    document.getElementById("changeLicenseButton").classList.toggle("d-none");
 }
 
-function fromAddToChange(){
-    document.getElementById("licenseForm").classList.add("d-none");
+function toggleFromAddToChangeForm(){
+    document.getElementById("licenseForm").classList.toggle("d-none");
     document.getElementById("licenseForm").reset();
-    // document.getElementById("searchLicenseButton").classList.add("d-none");
-    document.getElementById("fromAddToChangeButton").classList.add("d-none");
-    document.getElementById("fromChangeToAddButton").classList.remove("d-none");
-    document.getElementById("licenseChangeForm").classList.remove("d-none");
+    document.getElementById("changeLicenseButton").classList.toggle("d-none");
+    document.getElementById("addLicenseButton").classList.toggle("d-none");
+    document.getElementById("searchLicenseButton").classList.toggle("d-none");
+    document.getElementById("licenseChangeForm").classList.toggle("d-none");
     document.getElementById("licenseChangeForm").reset();
 }
 
-function fromChangeToAdd() {
+function toggleFromChangeToAddSearch() {
+    document.getElementById("licenseChangeForm").classList.toggle("d-none");
+    document.getElementById("licenseChangeForm").reset();
+    document.getElementById("changeLicenseButton").classList.toggle("d-none");
+    document.getElementById("addLicenseButton").classList.toggle("d-none");
+    document.getElementById("licenseForm").classList.toggle("d-none");
+    document.getElementById("licenseForm").reset();
+    document.getElementById("searchLicenseButton").classList.toggle("d-none");
+    document.getElementById("goBackButton").classList.toggle("d-none");
+}
+
+function toggleToAdd() {
+    document.getElementById("licenseSearchForm").classList.add("d-none");
     document.getElementById("licenseChangeForm").classList.add("d-none");
-    document.getElementById("licenseChangeForm").reset();
-    document.getElementById("fromAddToChangeButton").classList.remove("d-none");
-    document.getElementById("searchLicenseButton").classList.remove("d-none");
-    document.getElementById("fromChangeToAddButton").classList.add("d-none");
     document.getElementById("licenseForm").classList.remove("d-none");
-    document.getElementById("licenseForm").reset();
+    document.getElementById("searchLicenseButton").classList.remove("d-none");
+    document.getElementById("changeLicenseButton").classList.remove("d-none");
+    document.getElementById("addLicenseButton").classList.add("d-none");
+    document.getElementById("backButton").classList.add("d-none");
 }
 
-function removeLicenseContainer() {
-    document.getElementById("licenseContainer").classList.add("d-done");
-    document.getElementById("licenseContainer").innerHTML = "";
-    document.getElementById("searchForm").classList.remove("d-none");
-    document.getElementById("searchForm").reset();
-    document.getElementById("fromSearchToAddButton").classList.remove("d-none");
-    document.getElementById("backToSearchButton").classList.add("d-none");
+function toggleallAvailableLicensesContainer() {
+    document.getElementById("allAvailableLicensesContainer").classList.add("d-done");
+    document.getElementById("allAvailableLicensesContainer").innerHTML = "";
 }
-
-// function changeLicense(event) {
-//     event.preventDefault();
-// }
