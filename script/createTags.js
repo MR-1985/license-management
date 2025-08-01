@@ -24,50 +24,50 @@ function createForm() {
 function createSearchLicenseButton() {
     let searchLicenseButton = document.createElement("button");
     searchLicenseButton.id = "searchLicenseButton";
+    searchLicenseButton.className = "btn";
     searchLicenseButton.innerHTML = "Search License";
-    searchLicenseButton.onclick = toggleFromAddToSearchForm;
+    searchLicenseButton.onclick = fromAddToSearchForm;
     document.getElementById("limitedContent").appendChild(searchLicenseButton);
 }
 
-function createChangeLicenseButton() {
-    let changeLicenseButton = document.createElement("button");
-    changeLicenseButton.id = "changeLicenseButton";
-    changeLicenseButton.innerHTML = "Change License";
-    changeLicenseButton.onclick = toggleFromAddToChangeForm;
-    document.getElementById("limitedContent").appendChild(changeLicenseButton);
+function createFromAddToChangeButton() {
+    let fromAddToChangeButton = document.createElement("button");
+    fromAddToChangeButton.id = "fromAddToChangeButton";
+    fromAddToChangeButton.className = "fromAddToChangeButton btn";
+    fromAddToChangeButton.innerHTML = "Change License";
+    fromAddToChangeButton.onclick = fromAddToChange;
+    document.getElementById("limitedContent").appendChild(fromAddToChangeButton);
 }
 
-function createGoBackButton() {
-    let goBackButton = document.createElement("button");
-    goBackButton.id = "goBackButton";
-    goBackButton.className = "d-none";
-    goBackButton.innerHTML = "Go Back";
-    goBackButton.onclick = function () {
-        toggleFromAddToSearchForm();
-        toggleallAvailableLicensesContainer();
+function createFromSearchToAddButton() {
+    let fromSearchToAddButton = document.createElement("button");
+    fromSearchToAddButton.id = "fromSearchToAddButton";
+    fromSearchToAddButton.className = "d-none btn";
+    fromSearchToAddButton.innerHTML = "Go back to add licenses";
+    fromSearchToAddButton.onclick = function () {
+        fromSearchToAddForm();
     };
-    document.getElementById("limitedContent").appendChild(goBackButton);
+    document.getElementById("limitedContent").appendChild(fromSearchToAddButton);
 }
 
-function createBackButton(){
-    let backButton = document.createElement("button");
-    backButton.id = "backButton";
-    backButton.className = "d-none";
-    backButton.innerHTML = "Back";
-    backButton.onclick = function () {
-        toggleToAdd();
-        toggleallAvailableLicensesContainer();
+function createBackToSearchButton() {
+    let backToSearchButton = document.createElement("button");
+    backToSearchButton.id = "backToSearchButton";
+    backToSearchButton.className = "d-none btn";
+    backToSearchButton.innerHTML = "Go back to search licenses";
+    backToSearchButton.onclick = function () {
+        removeLicenseContainer();
     };
-    document.getElementById("limitedContent").appendChild(backButton);
+    document.getElementById("limitedContent").appendChild(backToSearchButton);
 }
 
-function createAddLicenseButton() {
-    let addLicenseButton = document.createElement("button");
-    addLicenseButton.id = "addLicenseButton";
-    addLicenseButton.className = "d-none";
-    addLicenseButton.innerHTML = "Add License";
-    addLicenseButton.onclick = toggleFromAddToChangeForm;
-    document.getElementById("limitedContent").appendChild(addLicenseButton);
+function createFromChangeToAddButton() {
+    let fromChangeToAddButton = document.createElement("button");
+    fromChangeToAddButton.id = "fromChangeToAddButton";
+    fromChangeToAddButton.className = "d-none btn";
+    fromChangeToAddButton.innerHTML = "Go back to add licenses";
+    fromChangeToAddButton.onclick = fromChangeToAdd
+    document.getElementById("limitedContent").appendChild(fromChangeToAddButton);
 }
 
 function createInfoText() {
@@ -83,19 +83,19 @@ function createInfoText() {
 
 function createSearchForm() {
     let searchForm = document.createElement("form");
-    searchForm.id = "licenseSearchForm";
+    searchForm.id = "searchForm";
     searchForm.className = "license-form d-none";
     searchForm.innerHTML = searchFormTemplate();
     searchForm.onsubmit = searchLicense;
     document.getElementById("limitedContent").appendChild(searchForm);
 }
 
-function createAllAvailableLicensesContainer() {
-    let allAvailableLicensesContainer = document.createElement("div");
-    allAvailableLicensesContainer.id = "allAvailableLicensesContainer";
-    allAvailableLicensesContainer.className = "allAvailableLicensesContainer";
-    allAvailableLicensesContainer.innerHTML = "";
-    document.getElementById("limitedContent").appendChild(allAvailableLicensesContainer);
+function createLicenseContainer() {
+    let licenseContainer = document.createElement("div");
+    licenseContainer.id = "licenseContainer";
+    licenseContainer.className = "licenseContainer d-none";
+    licenseContainer.innerHTML = "";
+    document.getElementById("limitedContent").appendChild(licenseContainer);
 }
 
 function createChangeForm() {
@@ -103,7 +103,10 @@ function createChangeForm() {
     changeForm.id = "licenseChangeForm";
     changeForm.className = "license-form d-none";
     changeForm.innerHTML = changeFormTemplate();
-    changeForm.onsubmit = changeLicense;
+    changeForm.onsubmit = async function (event) {
+        event.preventDefault();
+        await uploadNewDataToDataBase(event);
+    }
     document.getElementById("limitedContent").appendChild(changeForm);
 }
 

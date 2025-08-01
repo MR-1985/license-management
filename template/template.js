@@ -25,6 +25,7 @@ function searchFormTemplate() {
     <label for="Search_Dongle_ID">Search Dongle ID:</label>
     <input type="text" id="Search_Dongle_ID" name="dongleId" placeholder="Enter the dongle ID">
     <label for="Search_Affiliation">Search affiliation:</label>
+    <input type="hidden" id="Search_ID" name="Search_ID" value="">
     <input type="text" id="Search_Affiliation" name="affiliation" placeholder="Enter the affiliation">
     <button type="submit" id="search-button">Search license</button>
     `
@@ -41,7 +42,7 @@ function changeFormTemplate(){
     <label for="Change_Dongle_ID">Change Dongle ID (Required Fild):</label>
     <input style="border-color:red;" type="text" id="Change_Dongle_ID" name="dongleId" required placeholder="Which dongle ID do you want to change?">
     <label for="Change_Affiliation">Change affiliation:</label>
-    <input type="hidden" id="Change_ID" name="Change_ID" value="" />
+    <input type="hidden" id="Change_ID" name="Change_ID" value="">
     <input type="text" id="Change_Affiliation" name="affiliation" placeholder="Enter new affiliation">
     <button type="button" id="fill-form-button" onclick="fillTheChangeForm()">Fill the form</button>
     <button type="submit" id="change-button">Change license</button>
