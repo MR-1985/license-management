@@ -34,11 +34,10 @@ body {
     width: 100%;
     margin: 0px 10px 0px 10px;
     padding-top: 20px;
-    height: calc(100vh - 193px);
+    height: calc(100vh - 163px);
     display: flex;
     flex-direction: column;
     gap: 5px;
-    overflow-y: auto;
 }
 
 .license-form {
@@ -124,7 +123,6 @@ body {
     color: #666;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     width: 100%;
-    margin-top: 30px;
 }
 
 .footer-text {

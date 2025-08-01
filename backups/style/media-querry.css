@@ -1,0 +1,5 @@
+@media (min-width: 320px) {
+  body {
+    padding-inline: 15px;
+  }
+}
