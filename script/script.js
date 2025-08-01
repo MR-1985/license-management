@@ -23,7 +23,9 @@ async function init() {
         }
         let data = await response.json();
         licenseList = data;
-        console.log("Lizenzdaten geladen:", licenseList);
+        console.log("Lizenzdaten geladen:");
+        console.table(licenseList);
+
     } catch (error) {
         console.error("Fehler beim Laden oder Verarbeiten der Lizenzdaten:", error.message);
     }
@@ -32,17 +34,19 @@ async function init() {
 
 function addLicense(event) {
     event.preventDefault();
+    let licenseId = document.getElementById("ID").value.toString().trim().toLowerCase();
     let licenseName = document.getElementById("License_Name").value.trim().toLowerCase();
     let licenseOwner = document.getElementById("User").value.trim().toLowerCase();
     let licenseExpiryDate = document.getElementById("Expiry_Date").value.trim().toLowerCase();
     let licenseDongleId = document.getElementById("Dongle_ID").value.trim().toLowerCase();
     let licenseAffiliation = document.getElementById("Affiliation").value.trim().toLowerCase();
     let newLicense = {
-        License_Name: licenseName,
-        Expiry_Date: licenseExpiryDate,
-        User: licenseOwner,
-        Dongle_ID: licenseDongleId,
-        Affiliation: licenseAffiliation
+        id: licenseId,
+        license_name: licenseName,
+        expiry_date: licenseExpiryDate,
+        user: licenseOwner,
+        dongle_id: licenseDongleId,
+        affiliation: licenseAffiliation
     }
     licenseList.push(newLicense);
 
@@ -61,8 +65,9 @@ async function uploadToServer(newLicense) {
         });
         if (!response.ok) {
             throw new Error(`Upload fehlgeschlagen: ${response.status}`);
+        } else if (response.ok) {
+            console.log("Daten erfolgreich hochgeladen");
         }
-        console.log("Daten erfolgreich hochgeladen");
     } catch (error) {
         console.error("Fehler beim Hochladen der Lizenzdaten:", error.message);
     }
@@ -102,18 +107,18 @@ function filterLicenseList() {
 
 function getSearchedValues() {
     return {
-        ID: document.getElementById("ID").value.trim().toLowerCase(),
-        License_Name: document.getElementById("Search_License_Name").value.trim().toLowerCase(),
-        Expiry_Date: document.getElementById("Search_Expiry_Date").value.trim().toLowerCase(),
-        User: document.getElementById("Search_User").value.trim().toLowerCase(),
-        Dongle_ID: document.getElementById("Search_Dongle_ID").value.trim().toLowerCase(),
-        Affiliation: document.getElementById("Search_Affiliation").value.trim().toLowerCase()
+        id: document.getElementById("ID").value.trim().toLowerCase(),
+        license_name: document.getElementById("Search_License_Name").value.trim().toLowerCase(),
+        expiry_date: document.getElementById("Search_Expiry_Date").value.trim().toLowerCase(),
+        user: document.getElementById("Search_User").value.trim().toLowerCase(),
+        dongle_id: document.getElementById("Search_Dongle_ID").value.trim().toLowerCase(),
+        affiliation: document.getElementById("Search_Affiliation").value.trim().toLowerCase()
     };
 }
 
 function filterLicenses({ id, license_name, expiry_date, user, dongle_id, affiliation }) {
     return licenseList.filter(license => {
-        const idMatch = id ==="" || license.id.includes(id);
+        const idMatch = id === "" || license.id.toString().toLowerCase().includes(id);
         const nameMatch = license_name === "" || license.license_name.toLowerCase().includes(license_name);
         const expiryMatch = expiry_date === "" || license.expiry_date.toLowerCase().includes(expiry_date);
         const ownerMatch = user === "" || license.user.toLowerCase().includes(user);
@@ -146,6 +151,8 @@ function filterOldLicenseList() {
     const searchedValues = getSearchedOldValues();
     try {
         const filtered = filterOldLicenses(searchedValues)
+        console.log("Suchwerte:", searchedValues);
+        console.log("Gefundene Lizenzen:", filtered);
         if (filtered.length === 0) {
             handleNoResults();
             return;
@@ -159,34 +166,36 @@ function filterOldLicenseList() {
 
 function getSearchedOldValues() {
     return {
-        License_Name: document.getElementById("Change_License_Name").value.trim().toLowerCase(),
-        Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim().toLowerCase(),
-        User: document.getElementById("Change_User").value.trim().toLowerCase(),
-        Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase(),
-        Affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase()
+        id: document.getElementById("Change_ID").value.trim().toLowerCase(),
+        license_name: document.getElementById("Change_License_Name").value.trim().toLowerCase(),
+        expiry_date: document.getElementById("Change_Expiry_Date").value.trim().toLowerCase(),
+        user: document.getElementById("Change_User").value.trim().toLowerCase(),
+        dongle_id: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase(),
+        affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase()
     };
 }
 
-function filterOldLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affiliation }) {
+function filterOldLicenses({ id, license_name, expiry_date, user, dongle_id, affiliation }) {
     return licenseList.filter(license => {
-        const nameMatch = License_Name === "" || license.License_Name.toLowerCase().includes(License_Name);
-        const expiryMatch = Expiry_Date === "" || license.Expiry_Date.toLowerCase().includes(Expiry_Date);
-        const ownerMatch = User === "" || license.User.toLowerCase().includes(User);
-        const dongleIdMatch = Dongle_ID === "" || license.Dongle_ID.toLowerCase().includes(Dongle_ID);
-        const affiliationMatch = Affiliation === "" || license.Affiliation.toLowerCase().includes(Affiliation);
-        return nameMatch && expiryMatch && ownerMatch && dongleIdMatch && affiliationMatch;
+        const idMatch = id === "" || license.id.toString().toLowerCase().includes(id);
+        const nameMatch = license_name === "" || license.license_name.toLowerCase().includes(license_name);
+        const expiryMatch = expiry_date === "" || license.expiry_date.toLowerCase().includes(expiry_date);
+        const ownerMatch = user === "" || license.user.toLowerCase().includes(user);
+        const dongleIdMatch = dongle_id === "" || license.dongle_id.toLowerCase().includes(dongle_id);
+        const affiliationMatch = affiliation === "" || license.affiliation.toLowerCase().includes(affiliation);
+        return idMatch && nameMatch && expiryMatch && ownerMatch && dongleIdMatch && affiliationMatch;
     });
 }
 
 function fillFormWithFilteredLicenses(filteredLicenses) {
     if (filteredLicenses.length === 0) return;
     const license = filteredLicenses[0]; // nur der erste Treffer
-    document.getElementById("Change_ID").value = license.ID;
-    document.getElementById("Change_License_Name").value = license.License_Name.trim().toLowerCase();
-    document.getElementById("Change_Expiry_Date").value = license.Expiry_Date;
-    document.getElementById("Change_User").value = license.User.trim().toLowerCase();
-    document.getElementById("Change_Dongle_ID").value = license.Dongle_ID.trim().toLowerCase();
-    document.getElementById("Change_Affiliation").value = license.Affiliation.trim().toLowerCase();
+    document.getElementById("Change_ID").value = license.id.toString().trim().toLowerCase();
+    document.getElementById("Change_License_Name").value = license.license_name.trim().toLowerCase();
+    document.getElementById("Change_Expiry_Date").value = license.expiry_date.trim().toLowerCase();
+    document.getElementById("Change_User").value = license.user.trim().toLowerCase();
+    document.getElementById("Change_Dongle_ID").value = license.dongle_id.trim().toLowerCase();
+    document.getElementById("Change_Affiliation").value = license.affiliation.trim().toLowerCase();
     console.log("Formular mit vorhandenen Lizenzdaten ausgefüllt:", license);
 }
 
@@ -194,10 +203,10 @@ async function uploadNewDataToDataBase() {
     console.log("uploadNewDataToDataBase wurde gestartet");
     const updatedData = getUpdatedLicenseDataFromForm();
 
-    if (!updatedData.filter.License_Name || !updatedData.filter.Dongle_ID) {
-        console.error("Lizenzname oder Dongle-ID fehlen – Patch abgebrochen.");
-        return;
-    }
+    // if (!updatedData.filter.license_name || !updatedData.filter.dongle_id) {
+    //     console.error("Lizenzname oder Dongle-ID fehlen – Patch abgebrochen.");
+    //     return;
+    // }
     //--------------to-add------------
     const id = document.getElementById("Change_ID")?.value;
     if (!id) {
@@ -211,13 +220,14 @@ async function uploadNewDataToDataBase() {
 function getUpdatedLicenseDataFromForm() {
     return {
         filter: {
-            License_Name: document.getElementById("Change_License_Name").value.trim().toLowerCase(),
-            Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase()
+            id: document.getElementById("Change_ID").value.trim().toLowerCase(),
         },
         update: {
-            User: document.getElementById("Change_User").value.trim().toLowerCase(),
-            Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim(),
-            Affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase()
+            license_name: document.getElementById("Change_License_Name").value.trim().toLowerCase(),
+            dongle_id: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase(),
+            user: document.getElementById("Change_User").value.trim().toLowerCase(),
+            expiry_date: document.getElementById("Change_Expiry_Date").value.trim(),
+            affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase()
         }
     };
 }
@@ -238,8 +248,6 @@ async function patchLicense(updatedData, id) {
 
         if (response.status === 200) {
             alert("Lizenz erfolgreich aktualisiert.");
-        } else if (response.status === 204) {
-            alert("Es wurden keine Änderungen vorgenommen.");
         } else if (response.status === 404) {
             alert("Lizenz nicht gefunden.");
         } else {
@@ -247,6 +255,7 @@ async function patchLicense(updatedData, id) {
         }
 
         console.log(`Patch erfolgreich (${response.status}): ${responseText}`);
+        document.getElementById("licenseChangeForm").reset();
     } catch (error) {
         console.error("Fehler beim PATCH:", error.message);
     }
