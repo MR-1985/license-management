@@ -102,6 +102,7 @@ function filterLicenseList() {
 
 function getSearchedValues() {
     return {
+        ID: document.getElementById("ID").value.trim().toLowerCase(),
         License_Name: document.getElementById("Search_License_Name").value.trim().toLowerCase(),
         Expiry_Date: document.getElementById("Search_Expiry_Date").value.trim().toLowerCase(),
         User: document.getElementById("Search_User").value.trim().toLowerCase(),
@@ -110,14 +111,15 @@ function getSearchedValues() {
     };
 }
 
-function filterLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affiliation }) {
+function filterLicenses({ id, license_name, expiry_date, user, dongle_id, affiliation }) {
     return licenseList.filter(license => {
-        const nameMatch = License_Name === "" || license.License_Name.toLowerCase().includes(License_Name);
-        const expiryMatch = Expiry_Date === "" || license.Expiry_Date.toLowerCase().includes(Expiry_Date);
-        const ownerMatch = User === "" || license.User.toLowerCase().includes(User);
-        const dongleIdMatch = Dongle_ID === "" || license.Dongle_ID.toLowerCase().includes(Dongle_ID);
-        const affiliationMatch = Affiliation === "" || license.Affiliation.toLowerCase().includes(Affiliation);
-        return nameMatch && expiryMatch && ownerMatch && dongleIdMatch && affiliationMatch;
+        const idMatch = id ==="" || license.id.includes(id);
+        const nameMatch = license_name === "" || license.license_name.toLowerCase().includes(license_name);
+        const expiryMatch = expiry_date === "" || license.expiry_date.toLowerCase().includes(expiry_date);
+        const ownerMatch = user === "" || license.user.toLowerCase().includes(user);
+        const dongleIdMatch = dongle_id === "" || license.dongle_id.toLowerCase().includes(dongle_id);
+        const affiliationMatch = affiliation === "" || license.affiliation.toLowerCase().includes(affiliation);
+        return idMatch && nameMatch && expiryMatch && ownerMatch && dongleIdMatch && affiliationMatch;
     });
 }
 
@@ -190,58 +192,64 @@ function fillFormWithFilteredLicenses(filteredLicenses) {
 
 async function uploadNewDataToDataBase() {
     console.log("uploadNewDataToDataBase wurde gestartet");
-  const updatedData = getUpdatedLicenseDataFromForm();
+    const updatedData = getUpdatedLicenseDataFromForm();
 
-  if (!updatedData.filter.License_Name || !updatedData.filter.Dongle_ID) {
-    console.error("Lizenzname oder Dongle-ID fehlen – Patch abgebrochen.");
-    return;
-  }
-  //--------------to-add------------
-const id = document.getElementById("Change_ID")?.value;
-if (!id) {
-  console.error("Keine ID gefunden – Patch abgebrochen.");
-  return;
-}
-//----------------------------------
-  await patchLicense(updatedData, id);
+    if (!updatedData.filter.License_Name || !updatedData.filter.Dongle_ID) {
+        console.error("Lizenzname oder Dongle-ID fehlen – Patch abgebrochen.");
+        return;
+    }
+    //--------------to-add------------
+    const id = document.getElementById("Change_ID")?.value;
+    if (!id) {
+        console.error("Keine ID gefunden – Patch abgebrochen.");
+        return;
+    }
+    //----------------------------------
+    await patchLicense(updatedData, id);
 }
 
 function getUpdatedLicenseDataFromForm() {
-  return {
-    filter: {
-      License_Name: document.getElementById("Change_License_Name").value.trim().toLowerCase(),
-      Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase()
-    },
-    update: {
-      User: document.getElementById("Change_User").value.trim().toLowerCase(),
-      Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim(),
-      Affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase()
-    }
-  };
+    return {
+        filter: {
+            License_Name: document.getElementById("Change_License_Name").value.trim().toLowerCase(),
+            Dongle_ID: document.getElementById("Change_Dongle_ID").value.trim().toLowerCase()
+        },
+        update: {
+            User: document.getElementById("Change_User").value.trim().toLowerCase(),
+            Expiry_Date: document.getElementById("Change_Expiry_Date").value.trim(),
+            Affiliation: document.getElementById("Change_Affiliation").value.trim().toLowerCase()
+        }
+    };
 }
 
 async function patchLicense(updatedData, id) {
-  console.log("Patch wird ausgeführt mit ID:", id, "und Daten:", updatedData.update);
-  try {
-    const response = await fetch(`https://license-api.o-komik.workers.dev/api/licenses/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(updatedData.update)
-    });
+    console.log("Patch wird ausgeführt mit ID:", id, "und Daten:", updatedData.update);
+    try {
+        const response = await fetch(`https://license-api.o-komik.workers.dev/api/licenses/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updatedData.update)
+        });
 
-    const responseText = await response.text();
-    console.log("Antwort vom Server:", response.status, responseText);
+        const responseText = await response.text();
+        console.log("Antwort vom Server:", response.status, responseText);
 
-    if (!response.ok) {
-      throw new Error(`Patch fehlgeschlagen (${response.status}): ${responseText}`);
+        if (response.status === 200) {
+            alert("Lizenz erfolgreich aktualisiert.");
+        } else if (response.status === 204) {
+            alert("Es wurden keine Änderungen vorgenommen.");
+        } else if (response.status === 404) {
+            alert("Lizenz nicht gefunden.");
+        } else {
+            alert("Ein Fehler ist aufgetreten.");
+        }
+
+        console.log(`Patch erfolgreich (${response.status}): ${responseText}`);
+    } catch (error) {
+        console.error("Fehler beim PATCH:", error.message);
     }
-
-    console.log(`Patch erfolgreich (${response.status}): ${responseText}`);
-  } catch (error) {
-    console.error("Fehler beim PATCH:", error.message);
-  }
 }
 
 function handleNoResults() {
@@ -296,7 +304,7 @@ function fromChangeToAdd() {
 }
 
 function removeLicenseContainer() {
-    document.getElementById("licenseContainer").classList.add("d-done");
+    document.getElementById("licenseContainer").classList.add("d-none");
     document.getElementById("licenseContainer").innerHTML = "";
     document.getElementById("searchForm").classList.remove("d-none");
     document.getElementById("searchForm").reset();

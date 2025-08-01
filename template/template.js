@@ -1,5 +1,7 @@
 function formTemplate() {
     return `
+    <label for="ID">ID:</label>
+    <input type="text" id="ID" name="ID" placeholder="Enter new license">
     <label for="License_Name">License Name:</label>
     <input type="text" id="License_Name" name="name" required placeholder="Enter new license">
     <label for="Expiry_Date">Expiery date:</label>
@@ -16,6 +18,8 @@ function formTemplate() {
 
 function searchFormTemplate() {
     return `
+    <label for="Search_ID">Search ID:</label>
+    <input type="text" id="Search_ID" name="Search_ID" placeholder="Enter new license">
     <label for="Search_License_Name">Search license:</label>
     <input type="text" id="Search_License_Name" name="searchlicense" placeholder="Enter license name">
     <label for="Search_Expiry_Date">Search Expiery date:</label>
@@ -25,7 +29,6 @@ function searchFormTemplate() {
     <label for="Search_Dongle_ID">Search Dongle ID:</label>
     <input type="text" id="Search_Dongle_ID" name="dongleId" placeholder="Enter the dongle ID">
     <label for="Search_Affiliation">Search affiliation:</label>
-    <input type="hidden" id="Search_ID" name="Search_ID" value="">
     <input type="text" id="Search_Affiliation" name="affiliation" placeholder="Enter the affiliation">
     <button type="submit" id="search-button">Search license</button>
     `
@@ -33,6 +36,8 @@ function searchFormTemplate() {
 
 function changeFormTemplate(){
     return `
+    <label for="Change_ID">Change ID:</label>
+    <input type="text" id="Change_ID" name="Change_ID" required placeholder="Enter new license">
     <label for="Change_License_Name">Change License Name (Required Fild):</label>
     <input style="border-color:red;" type="text" id="Change_License_Name" name="name" required placeholder="Which license do you want to change?">
     <label for="Change_Expiry_Date">Change Expiery date:</label>
@@ -42,7 +47,6 @@ function changeFormTemplate(){
     <label for="Change_Dongle_ID">Change Dongle ID (Required Fild):</label>
     <input style="border-color:red;" type="text" id="Change_Dongle_ID" name="dongleId" required placeholder="Which dongle ID do you want to change?">
     <label for="Change_Affiliation">Change affiliation:</label>
-    <input type="hidden" id="Change_ID" name="Change_ID" value="">
     <input type="text" id="Change_Affiliation" name="affiliation" placeholder="Enter new affiliation">
     <button type="button" id="fill-form-button" onclick="fillTheChangeForm()">Fill the form</button>
     <button type="submit" id="change-button">Change license</button>
@@ -52,15 +56,15 @@ function changeFormTemplate(){
 function licenseContainerTemplate(license) {
     return `
     <hr>
-    <p><strong>License_Name:</strong> ${license?.License_Name ? license.License_Name.toUpperCase() : ''}</p>
-    <p><strong>Expiry_Date:</strong> ${license?.Expiry_Date || ''}</p>
-    <p><strong>User:</strong> ${license?.User ? license.User.charAt(0).toUpperCase() + license.User.slice(1) : ''}</p>
-    <p><strong>Dongle_ID:</strong> ${license?.Dongle_ID || ''}</p>
+    <p><strong>License_Name:</strong> ${license?.license_name ? license.license_name.toUpperCase() : ''}</p>
+    <p><strong>Expiry_Date:</strong> ${license?.expiry_date || ''}</p>
+    <p><strong>User:</strong> ${license?.user ? license.user.charAt(0).toUpperCase() + license.user.slice(1) : ''}</p>
+    <p><strong>Dongle_ID:</strong> ${license?.dongle_id || ''}</p>
     <p><strong>Affiliation:</strong> ${
-        license?.Affiliation
-            ? (/[a-zA-Z]/.test(license.Affiliation) 
-                ? license.Affiliation.toUpperCase() 
-                : license.Affiliation)
+        license?.affiliation
+            ? (/[a-zA-Z]/.test(license.affiliation) 
+                ? license.affiliation.toUpperCase() 
+                : license.affiliation)
             : ''
     }</p>
     <hr>
