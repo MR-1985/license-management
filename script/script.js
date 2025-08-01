@@ -179,7 +179,7 @@ function filterOldLicenses({ License_Name, Expiry_Date, User, Dongle_ID, Affilia
 function fillFormWithFilteredLicenses(filteredLicenses) {
     if (filteredLicenses.length === 0) return;
     const license = filteredLicenses[0]; // nur der erste Treffer
-    document.getElementById("Change_ID").value = license.rowid;
+    document.getElementById("Change_ID").value = license.ID;
     document.getElementById("Change_License_Name").value = license.License_Name.trim().toLowerCase();
     document.getElementById("Change_Expiry_Date").value = license.Expiry_Date;
     document.getElementById("Change_User").value = license.User.trim().toLowerCase();
